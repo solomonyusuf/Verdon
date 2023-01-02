@@ -1,37 +1,25 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Verdon</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿
+<header id="header" class="header fixed-top" data-scrollto-offset="0">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+        <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+            
+            <h1>Ver<span>don.</span></h1>
+        </a>
 
-@code {
-    private bool collapseNavMenu = true;
+        <nav id="navbar" class="navbar">
+            <ul>
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+                
+                <li><a class="nav-link scrollto" href="/quiz/login">Quiz</a></li>
+                <li><a class="nav-link scrollto" href="/lecture">Lecture</a></li>
+                <li><a class="nav-link scrollto" href="/libary">Libary</a></li>
+                <li><a class="nav-link scrollto" href="/socical">Socical</a></li>
+               
+            </ul>
+            <LoginDisplay/>
+            <i class="bi bi-list mobile-nav-toggle d-none"></i>
+        </nav><!-- .navbar -->
 
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
+    </div>
+</header><!-- End Header -->

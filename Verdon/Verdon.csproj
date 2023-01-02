@@ -23,6 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\LecturerComponents\" />
+    <Folder Include="Pages\LectureComponent\" />
     <Folder Include="wwwroot\StaticFiles\" />
   </ItemGroup>
 
