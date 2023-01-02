@@ -52,6 +52,7 @@ namespace Verdon
             services.AddSingleton<MailSettings>();
             services.AddSingleton<MailService>();
             services.AddTransient<UserService>();
+            services.AddTransient<UploadController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

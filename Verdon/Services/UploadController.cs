@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net.Http.Headers;
 using System.Security.Permissions;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +16,7 @@ namespace Verdon.Services
     public class UploadController : ControllerBase
     {
         [HttpPost, DisableRequestSizeLimit]
-        public IActionResult Upload(IBrowserFile seed)
+        public async Task<IActionResult> Upload(IBrowserFile seed)
         {
             try
             {
@@ -31,7 +32,7 @@ namespace Verdon.Services
 
                     using (var stream = new FileStream(fullPath, FileMode.Create))
                     {
-                        file.CopyTo(stream);
+                        await file.CopyToAsync(stream);
                     }
 
                     return Ok(new { dbPath });

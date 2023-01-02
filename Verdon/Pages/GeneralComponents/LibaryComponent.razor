@@ -3,8 +3,179 @@
 @inject UploadController _upload
 
 
-<h3>LibaryComponent</h3>
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-8">
+        <div class="card" style="margin:2px;">
+            <EditForm Model="book" class="card-body">
+                 <div class="input-group">
+                     <InputText @bind-Value="@value" class="bg-light form-control border-0 small" type="text" placeholder="Search for Book Name..."/>
+                    <button class="btn btn-info py-0" type="button" @onclick="GetAll">
+                         <i class="fas fa-search"></i></button>
+                    <button style="margin-left:2px;" @onclick="Filter" class="btn btn-warning py-0" type="button">
+                        <i class="fas fa-recycle"></i>
+                    </button>
+                </div><br />
+                <div class="mb-3 col-md-6" align="center">
+                    <InputSelect class="form-control" @bind-Value="@filter">
+                        <option value="NULL" @onclick="Filter" selected>All</option>
+                        @foreach (var item in departments)
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </InputSelect>
+                   
+                </div>
+                <strong align="center" class="col-md-6">@books.Count() books</strong>
+            </EditForm>
+         </div>
+         <div class="card" style="margin:2px;">
+            <div class="card-body">
+               @if(books.Count() == 0)
+               {
+                   <p>No data available</p>
+               }
+               @foreach (var item in books)
+               {
+                    <div class="card" style="margin:2px;">
+                        <div class="card-body">
+                            <h5><a target="_blank" href="@item.File">@item.Name</a></h5>
+                            <small>@item.Image KB | @(int.Parse(item.Image)/1024) MB</small>
+                        </div>
+                    </div>
+                }
+
+                
+           </div>
+         </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card" style="margin:2px;">
+            <EditForm Model="@book" OnSubmit="@Post" class="card-body">
+                <div class="mb-3">
+                    <p>NOTE: <i>file must not excced 30MB, patiently load file.</i></p>
+                    </div>
+                <div class="form-group">
+                    <InputFile OnChange="@Upload" type="file" class="form-control form-control-lg"  />
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" aria-valuenow="@counter" aria-valuemin="0" aria-valuemax="100" style="width:@(counter/25 * 100)%;">@(counter / 25 * 100)%</div>
+                </div>
+                <div class="form-group">
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Select Department:&nbsp;@book.Department</strong></label>
+                        <InputSelect class="form-control" @bind-Value="@book.Department">
+                            <option selected>NULL</option>
+                            @foreach (var item in departments)
+                            {
+                                <option value="@item">@item</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+                <div class="form-group" align="center">
+                    <button class="btn btn-info btn-lg w-50" type="submit">SUBMIT</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
 
 @code {
+    public Book book = new();
+    public List<Book> books = new();
+    public List<Department> departments = new();
+    System.Timers.Timer aTimer = new System.Timers.Timer(1000);
+    public int counter = 0;
+    public int total;
+    public string value;
+    public string filter;
 
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+        departments = await _db.Department.ToListAsync();
+    }
+
+    async Task Filter()
+    {
+        books  = await _db.Book.ToListAsync();
+        value = null;
+        filter = null;
+    }
+
+    async Task<List<Book>> GetAll()
+    {
+        books = await _db.Book.ToListAsync();
+
+        if(value != null)
+        {
+            books = await _db.Book.Where(x => x.Name.ToLower().Contains(value.ToLower())).ToListAsync();
+        }
+        if (filter != null)
+        {
+            books = await _db.Book.Where(x => x.Name.ToLower().Contains(filter.ToLower()) || x.Department.ToLower().Contains(value.ToLowerInvariant())).ToListAsync();
+        }
+
+        
+
+        return books;
+    }
+
+    void Filter(string val)
+    {
+        books = books.Where(x => x.Department.Equals(val)).ToList();
+    }
+
+    public async Task Upload(InputFileChangeEventArgs args)
+    {
+        try
+        {
+            StartTimer();
+            var file = args.File;
+            book.Name = file.Name;
+            book.Image = (file.Size / (1024)).ToString();
+            book.File = $"wwwroot\\StaticFiles\\{file.Name}";
+            await _upload.Upload(file);
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async Task Post()
+    {
+        try
+        {
+            await _db.Book.AddAsync(book);
+            await _db.SaveChangesAsync();
+            value = null;
+            filter = null;
+            books = await GetAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    void StartTimer()
+    {
+
+        aTimer.Elapsed += CountDownTimer;
+        aTimer.Enabled = true;
+    }
+    async void CountDownTimer(Object source, ElapsedEventArgs e)
+    {
+        if (counter < 25)
+        {
+            counter += 1;
+        }
+        else
+        {
+            aTimer.Enabled = false;
+        }
+        await InvokeAsync(StateHasChanged);
+    }
 }
