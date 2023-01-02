@@ -1,5 +1,152 @@
-﻿<h3>LectureDetail</h3>
+﻿@page "/lecture/detail/{Id}"
+@inject ApplicationDbContext _db
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="card" style="background-image:url('assets/img/portfolio/product-1.jpg');">
+            <div class="card-body">
+                <h3>@lect.CourseCode : @lect.LectureName</h3>
+            </div>
+        </div>
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1">Lessons</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2">Resources</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-3">Assignment</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-4">Attendance</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                  @if(Lessons.Count() == 0)
+                  {
+                        <p>No data available.</p>
+                  }
+                  @foreach (var item in Lessons)
+                  {
+                        <div class="card" style="margin:2px;">
+                            <div class="card-body">
+                                <h5><a target="_blank" href="@item.Video"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.LessonName</a></h5>
+                                <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-2">
+                    @if (Resources.Count() == 0)
+                    {
+                        <p>No data available.</p>
+                    }
+                    @foreach (var item in Resources)
+                    {
+                        <div class="card" style="margin:2px;">
+                            <div class="card-body">
+                                <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
+                                <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-3">
+                    @if (Assignments.Count() == 0)
+                    {
+                        <p>No data available.</p>
+                    }
+                    @foreach (var item in Assignments)
+                    {
+                        <div class="card" style="margin:2px;">
+                            <div class="card-body">
+                                <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
+                                <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-4">
+                    @if (Attendances.Count() == 0)
+                    {
+                        <p>No data available.</p>
+                    }
+                    @foreach (var item in Attendances)
+                    {
+                        <div class="card" style="margin:2px;">
+                            <div class="card-body">
+                                <div class="card-header py-3">
+                                    <p class="text-primary m-0 fw-bold">Students Info - @Attendances.Count() </p>
+                                </div>
+                                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                    <table class="table my-0" id="dataTable">
+                                        <thead>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Matric No</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Department</th>
+                                                <th>Date</th>
+                                              
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                
+                                                <td>@(Key++)</td>
+                                                <td>@item.MatricNo</td>
+                                                <td>@item.FirstName</td>
+                                                <td>@item.LastName</td>
+                                                <td>@item.Department</td>
+                                                <td>@item.DateTime</td>
+                                            </tr>
+                                           
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>No</th>
+                                                <th>Matric No</th>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Department</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
+    public Lecture lect = new();
+    public List<Lesson> Lessons = new();
+    public List<Resource> Resources = new();
+    public List<Assignment> Assignments = new();
+    public List<Attendance> Attendances = new();
+    public int Key = 1;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+    }
+
+    async Task GetAll()
+    {
+        try
+        {
+            lect = await _db.Lecture.FindAsync(Guid.Parse(Id));
+            Lessons = await _db.Lesson.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Resources = await _db.Resource.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Assignments = await _db.Assignment.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Attendances = await _db.Attendance.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
 }
