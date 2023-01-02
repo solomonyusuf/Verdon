@@ -19,6 +19,7 @@ using System.Security.Permissions;
 using System.Threading.Tasks;
 using Verdon.Areas.Identity;
 using Verdon.Data;
+using Verdon.Services;
 
 namespace Verdon
 {
@@ -44,7 +45,8 @@ namespace Verdon
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<MailSettings>();
+            services.AddSingleton<MailService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +60,6 @@ namespace Verdon
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
