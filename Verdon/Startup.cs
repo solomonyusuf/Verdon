@@ -18,6 +18,7 @@ using System.Linq;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using Verdon.Areas.Identity;
+using Verdon.Core.Base;
 using Verdon.Data;
 using Verdon.Services;
 
@@ -38,8 +39,11 @@ namespace Verdon
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    Configuration.GetConnectionString("ApplicationDbContextConnection")));
+            services.AddIdentity<IdentityUser, Role>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddDefaultUI()
+                .AddDefaultTokenProviders()
+                .AddRoles<Role>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -50,7 +54,7 @@ namespace Verdon
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<IdentityUser> userManager, RoleManager<Role> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -63,7 +67,9 @@ namespace Verdon
                 app.UseHsts();
             }
 
-            //[SecurityPermission(SecurityAction.Demand, ControlThread = true)]
+
+            //seed users
+            SeedService.SeedData(userManager, roleManager);
 
             // configure static file permission
             FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.Write, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));
