@@ -1,0 +1,354 @@
+﻿@page "/private/quiz/page/{QuizId}/{UserId}"
+@using System.Timers
+@using Verdon.Core.Base
+@inject ApplicationDbContext _context
+@inject NavigationManager router
+@inject UserService _user
+
+
+<section style="margin-top:100px;">
+    <div class="row gutters-sm">
+        <div class="col-md-8">
+            <div class="card mb-3" style="margin-left:4px;">
+                <div class="card-body">
+                    <div class="col">
+                        <div class="row" style="font-family:Angkor, serif;">
+                            @if (question != null)
+                            {
+                                <div class="col-md-11">
+                                    <p style="font-size:large;">
+                                        <strong>@QKey. </strong>
+                                        @question.Title
+                                        @if (question.Image != null)
+                                        {
+                                            <div class="mb-3">
+                                                <a href="@question.Image" target="_blank"><img src="@question.Image" class="img-fluid" style="height:300px;width:400px;" /></a>
+                                            </div>
+                                        }
+                                    </p>
+                                    <div class="row">
+
+                                        <EditForm Model="@quiz">
+                                            <InputRadioGroup @bind-Value="@val">
+                                                @foreach (var item in question.Options)
+                                                {
+                                                    @if (question.Options.Count() != 0)
+                                                    {
+                                                        @if (item.PrivateQuestionId == CheckQuestion(item.PrivateQuestionId).Result)
+                                                        {
+
+                                                            <p style="margin-bottom:5px;font-size:larger;">@(" " + item.Alphabet + " ")<InputRadio Value="@item.Alphabet" /> @item.Content<br /></p>
+                                                        }
+                                                        @if (item.PrivateQuestionId != CheckQuestion(item.PrivateQuestionId).Result)
+                                                        {
+                                                            <p style="margin-bottom:5px;font-size:larger;">@(" " + item.Alphabet + " ")<InputRadio Value="@item.Alphabet" /> @item.Content<br /></p>
+                                                        }
+                                                    }
+
+
+                                                }
+
+                                            </InputRadioGroup>
+                                        </EditForm>
+
+                                    </div>
+
+                                    @if (val != null)
+                                    {
+                                        <button align="center" style="margin:2px;" @onclick="@(()=> ClearAnswer(question.PrivateQuestionId, QKey))" class="btn btn-outline-danger btn-sm"> Clear </button>
+                                    }
+
+                                </div>
+                            }
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+
+                <div class="card-body">
+                    <div>
+                        @if (QKey >= 2)
+                        {
+                            <button style="margin:2px;" class="btn btn-outline-info" @onclick="@(()=>NavigateBack(question))">  Back </button>
+
+                        }
+                        @if (QKey != questions.Count())
+                        {
+                            <button style="margin:2px;" class="btn btn-outline-primary" @onclick="@(()=>SelectQuestion(question,val))">  Next </button>
+                        }
+                        @if (QKey == questions.Count())
+                        {
+                            <button style="margin:2px;" class="btn btn-outline-primary" @onclick="@(()=>SelectQuestion(question,val))"> Submit </button>
+                        }
+                    </div>
+
+                    <ul class="card-body">
+                        @foreach (var item in questions)
+                        {
+
+                            <li id="li"><button id="question" @onclick="@(()=>LoadQuestion(item,questions.IndexOf(item)+ 1))" class="shadow btn btn-sm">@(Key++)</button></li>
+
+                        }
+                    </ul>
+                    <br />
+                    <div>
+                        <p align="center"><strong>Time:@(counter / 60):@(counter % 60) remaining </strong></p>
+                        <br />
+                        <p align="center"><strong>(@QKey of @questions.Count() questions)</strong></p>
+                        <br />
+
+                        <p align="center"><strong>Attempted: @Attempts.Count() questions</strong></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex flex-column align-items-center text-center">
+                        <img src="@user.Image" alt="Admin" class="rounded-circle" width="150">
+                        <div class="mt-3">
+                            <h4>@user.FirstName&nbsp;@user.LastName</h4>
+                            <hr />
+                            <p>@user.Id</p>
+                            <hr />
+                            <p class="text-secondary mb-1">@quiz.Title</p>
+                            <hr />
+                            <h5><strong>Time:@(counter / 60):@(counter % 60) </strong></h5>
+                            @if (validate != null)
+                            {
+                                <h5><i>@validate</i></h5>
+                            }
+                            @if (Attempts.Count() == questions.Count())
+                            {
+                                <button class="btn btn-info btn-lg" @onclick="EndAttempt">End quiz</button>
+                            }
+                            @if (Attempts.Count() != questions.Count())
+                            {
+                                <button class="btn btn-info btn-lg" disabled>End Attempt</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                #question {
+                    border-radius: 25px;
+                    margin-bottom: 10px;
+                    margin: 5px;
+                }
+
+                #li {
+                    display: inline;
+                }
+            </style>
+
+        </div>
+
+    </div>
+</section>
+
+
+@code {
+    [Parameter]
+    public string QuizId { get; set; }
+    [Parameter]
+    public string UserId { get; set; }
+    public PrivateQuiz quiz = new();
+    public User user = new();
+    public Track track = new();
+    public PrivateQuestion question = new();
+    public List<PrivateQuestion> questions = new();
+    public List<PrivateAttempt> Attempts = new();
+    public PrivateQuizResult result = new();
+    System.Timers.Timer aTimer = new System.Timers.Timer(1000);
+    public int counter = 0;
+    public string val = null;
+    public int score = 0;
+    public string validate = null;
+    public int Key = 1;
+    public int QKey = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+        ConfigureTrack();
+        LoadQuestion(questions[0], QKey);
+        StartTimer();
+    }
+
+    public async Task GetAll()
+    {
+        try
+        {
+            user = await _user.CurrentUser();
+            quiz = await _context.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
+            questions = await _context.PrivateQuestion.Where(x => x.PrivateQuizId == Guid.Parse(QuizId)).ToListAsync();
+            track = await _context.Track.FindAsync(UserId);
+
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    void LoadQuestion(PrivateQuestion Q, int I)
+    {
+        val = null;
+        question = Q;
+        question.Options = _context.PrivateOption.Where(x=> x.PrivateQuestionId == Q.PrivateQuestionId).ToList();
+        Key = 1;
+        QKey = I;
+    }
+    async void EndAttempt()
+    {
+        validate = "Please wait .......";
+        Attempts.ForEach(x =>
+        {
+            if (x.Response.Equals(x.Answer))
+                score++;
+        });
+        PassParameters();
+        var r = await _context.PrivateQuizResult.AddAsync(result);
+        await _context.SaveChangesAsync();
+        _context.RemoveRange(Attempts);
+        await _context.SaveChangesAsync();
+        router.NavigateTo($"/private/quiz/result/{QuizId}/{UserId}/{score}");
+
+    }
+
+    void PassParameters()
+    {
+        result.Score = (score * quiz.Factor).ToString();
+        result.PrivateQuizId = Guid.Parse(this.QuizId);
+        result.UserId = this.UserId;
+        result.FirstName = user.FirstName;
+        result.LastName = user.LastName;
+        result.MiddleName = user.MiddleName;
+        result.Department = user.Department;
+        result.MatricNo = user.MatricNo;
+    }
+
+    async Task<Guid> CheckQuestion(Guid Id)
+    {
+        var res = new Guid();
+        try
+        {
+            var req = await _context.PrivateAttempt.Where(x=> x.PrivateQuestionId == Id).SingleAsync();
+            res = req.PrivateQuestionId;
+            Key = 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        return res;
+    }
+
+
+    async Task FetchAttempts()
+    {
+        try
+        {
+            var res = await _context.PrivateAttempt.Where(x => x.UserId == this.UserId && x.QuizId == int.Parse(this.QuizId)).ToListAsync();
+            Attempts = res;
+            Key = 1;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+    }
+
+
+    async Task SelectQuestion(PrivateQuestion Q, string V)
+    {
+        if (V != null)
+        {
+            Key = 1;
+            var inp = new PrivateAttempt()
+                {
+                    UserId = UserId,
+                    QuizId = int.Parse(QuizId),
+                    PrivateQuestionId = Q.PrivateQuestionId,
+                    Response = V,
+                    Answer = Q.Answer,
+                    DateTime = DateTime.Now
+                };
+            var att = Attempts.Where(x => x.PrivateQuestionId == Q.PrivateQuestionId).SingleOrDefault();
+            if (att != null)
+            {
+                await _context.PrivateAttempt.AddAsync(inp);
+                await _context.SaveChangesAsync();
+            }
+            await FetchAttempts();
+        }
+        val = null;
+        LoadQuestion(questions[questions.IndexOf(Q) + 1], (QKey + 1));
+
+    }
+
+
+    async void ClearAnswer(Guid I, int K)
+    {
+        var req = Attempts.Where(x => x.PrivateQuestionId == I).SingleOrDefault();
+        _context.Remove(req);
+        await _context.SaveChangesAsync();
+        await FetchAttempts();
+    }
+
+
+    void NavigateBack(PrivateQuestion Q)
+    {
+        LoadQuestion(questions[(questions.IndexOf(Q) - 1)], (QKey - 1));
+    }
+
+
+    void ConfigureTrack()
+    {
+        try
+        {
+            var a = track.DateTime - DateTime.Now;
+            var d = Math.Round(a.TotalSeconds, 0, 0);
+            counter = Convert.ToInt32(d);
+            if (DateTime.Now.ToShortTimeString() == track.DateTime.ToShortTimeString())
+            {
+                EndAttempt();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    void StartTimer()
+    {
+
+        aTimer.Elapsed += CountDownTimer;
+        aTimer.Enabled = true;
+    }
+    async void CountDownTimer(Object source, ElapsedEventArgs e)
+    {
+        if (counter > 0)
+        {
+
+            Key = 1;
+            counter -= 1;
+        }
+        else
+        {
+            aTimer.Enabled = false;
+            ConfigureTrack();
+        }
+        await InvokeAsync(StateHasChanged);
+    }
+}

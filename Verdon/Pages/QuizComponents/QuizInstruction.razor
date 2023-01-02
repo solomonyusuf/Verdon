@@ -1,0 +1,94 @@
+﻿@page "/quiz/instruction/{QuizId}"
+@inject ApplicationDbContext _db
+@inject NavigationManager router
+@inject UserService _usr
+
+
+<section style="margin-top:100px;">
+    <div class="card shadow" style="text-align: left">
+        <div class="card-body" style="box-shadow: 0px 0px;">
+            <h4 class="card-title" style="text-align: center;font-weight: bold;">@quiz.Title.</h4>
+            <h6 class="text-muted card-subtitle mb-2" style="text-align: center;"> Duration: @quiz.Duration minutes</h6>
+            <p class="card-text" style="text-align: center;font-weight: bold;color: rgb(3,3,3);">Name: @user.FirstName&nbsp;@user.MiddleName&nbsp;@user.LastName&nbsp;|@user.Sex </p>
+            <div>
+                <h1 style="font-style: italic;text-align: center;font-size: 30px;">Read the following instructions carefully.</h1>
+                <ul>
+                    <li><h5><i>Do not refresh this page</i></h5></li>
+                    <li>*&nbsp;Ensure you are in a well condusive and quiet environment. Remember this exam/test session will be recorded, so avoid suspicious movement and switching tabs. Calculator, a pencil and eraser, paper are allowed(only for calculational subjects).</li>
+                    <li>*&nbsp;Ensure your environment is well lighted so that your face can be seen or else this exam/test will be forfieted. Do not stand up after exam has started.</li>
+                    <li>*&nbsp;Ensure stable internet connection and be time concious as there will be a count down time for exam to end. Avoid looking else where except the screen and tools.</li>
+                    <li>*&nbsp;Make sure you are well prepared before attempting this exam/test, there will be no pity once submitted/started.</li>
+                    <li>*&nbsp;Ensure you do not cancle when exam/test has started or this will lead to anulling this exam hence a zero mark.</li>
+                    <li align="center">Good luck, and success. Amen.</li>
+                </ul>
+                <p align="center">
+                    <button @onclick=@(()=> ConfigureTrack()) class="btn btn-warning btn-lg" type="button"
+                       style="text-align: center;font-weight: bold;font-style: italic;
+                margin: 10px;margin-left: 50px;">
+                        Start Exam Now
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@code {
+
+     /*
+     * Decr : posting timespan, validating time, fetching user and quiz
+    */
+    [Parameter]
+    public string QuizId { get; set; }
+    public User user = new();
+    public Track track = new();
+    public PrivateQuiz quiz = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+ 
+    }
+    async Task GetAll()
+    {
+        try
+        {
+            user = await _usr.CurrentUser();
+            quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
+            track = await _db.Track.FindAsync(user.Id);
+            if(track.DateTime < DateTime.Now)
+            {
+                _db.Track.Remove(track);
+                await _db.SaveChangesAsync();
+            }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    async Task ConfigureTrack()
+    {
+        try
+        {
+            track.TrackId = user.Id;
+            track.QId = QuizId;
+            if (track.QId != QuizId)
+            {
+                await _db.Track.AddAsync(track);
+                await _db.SaveChangesAsync();
+                
+            }
+            router.NavigateTo($"/private/quiz/page/{QuizId}/{user.Id}");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    
+}

@@ -51,6 +51,7 @@ namespace Verdon
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<MailSettings>();
             services.AddSingleton<MailService>();
+            services.AddTransient<UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
