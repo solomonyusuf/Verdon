@@ -28,7 +28,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Downloads\Verdon.Core\Verdon.Core.csproj" />
     <ProjectReference Include="..\Verdon.Core\Verdon.Core.csproj" />
   </ItemGroup>
 

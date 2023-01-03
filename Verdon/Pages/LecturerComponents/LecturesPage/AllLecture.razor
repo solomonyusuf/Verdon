@@ -1,5 +1,6 @@
 ﻿@page "/alllecture"
 @layout _LecturerLayout
+@inject ApplicationDbContext _db
  
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Database Lectures &nbsp;<a class="btn btn-outline-primary" href="/add/lecture">Add Lecture</a></h3>
@@ -59,16 +60,13 @@
                         {
                             <tr>
                                 <td>@(Key++)</td>
-                                <td>@item.StaffId</td>
-                                <td>
-                                    <a href="@item.Image"><img class="rounded-circle me-2" width="30" height="30" src="@item.Image" /></a>
-                                    &nbsp;<strong>@item.FirstName &nbsp; @item.LastName &nbsp; @item.MiddleName</strong>
-                                </td>
-                                <td>@item.Sex</td>
-                                <td>@item.DOB</td>
-                                <td>@item.Bank - @item.Account_Name - @item.Account_No</td>
-                                <td>@item.PhoneNo_1</td>
-                                <td><a class="btn btn-outline-primary" href="/staff/detail/@item.StaffId"><i class="fa fa-edit"></i></a></td>
+                                <td>@item.LectureName</td>
+                                <td>@item.LecturePass</td>
+                                <td>@item.Password</td>
+                                <td>@item.DateTime</td>
+                                <td>@item.LectureName</td>
+                                <td><a class="btn btn-info" href="/lecture/detail/@item.LectureId"><i class="fa fa-edit"></i></a></td>
+                                <td><a class="btn btn-outline-primary" href="/lecture/detail/@item.LectureId"><i class="fa fa-edit"></i></a></td>
                                 <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
                             </tr>
                         }
@@ -117,21 +115,20 @@
 
     public List<int> Ops = new List<int> { 10, 25, 50, 100 };
 
-    [HttpGet]
+
     public async Task GetAll()
     {
         try
         {
-            var req = await _db.Staffs.ToListAsync();
+            var req = await _db.Lecture.ToListAsync();
             Key = 1;
             if (search.input != null)
             {
 
                 model = req.Where(x =>
-                    x.StaffId.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
-                    x.FirstName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
-                    x.LastName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
-                    x.MiddleName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
+                    x.LectureId.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.LectureName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.CourseCode.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
                 ).ToList();
             }
             else
@@ -147,13 +144,13 @@
 
     }
 
-    [HttpGet]
+    
     public async Task Refresh()
     {
         try
         {
             Key = 1;
-            var req = await _db.Staffs.ToListAsync();
+            var req = await _db.Lecture.ToListAsync();
             model = req;
 
 
@@ -189,12 +186,12 @@
 
     }
 
-    [HttpDelete]
-    public async Task Remove(Staff s)
+    
+    public async Task Remove(Lecture s)
     {
         try
         {
-            _db.Staffs.Remove(s);
+            _db.Lecture.Remove(s);
             await _db.SaveChangesAsync();
             await GetAll();
 
