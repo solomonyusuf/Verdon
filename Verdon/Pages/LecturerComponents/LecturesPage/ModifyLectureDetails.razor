@@ -1,86 +1,160 @@
-﻿@page "/modify"
+﻿@page "/modify/lecture/{Id}"
 @layout _LecturerLayout
+@inject ApplicationDbContext _db
 
-<div class="container-fluid" data-aos="zoom-out">
-                    <div class="row">
-                        <div class="col-md-4 mb-4">
-                        <div class="card border-start-success py-2">
-                            <div class="card-body">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col me-2">
-                                        <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Lectures</span></div>
-                                        <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
-                                    </div>
-                                    <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
-                                </div>
-                            </div>
-                        </div>
+<div class="row" data-aos="zoom-out">
+    <div class="col-md-8">
+            <div class="card shadow">
+            <div class="card-body">
+                <div class="card" style="background-image:url('assets/img/portfolio/product-1.jpg');height:200px;">
+                    <div class="card-body">
+                        <h3>@lect.CourseCode : @lect.LectureName</h3>
                     </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card border-start-success py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col me-2">
-                                            <div class="text-uppercase text-success fw-bold text-xs mb-1"><span> Quizzes</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
-                                        </div>
-                                        <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                </div>
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1">Lessons</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2">Resources</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-3">Assignment</a></li>
+                        <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-4">Attendance</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" role="tabpanel" id="tab-1">
+                            @if (Lessons.Count() == 0)
+                            {
+                                <p>No data available.</p>
+                            }
+                            @foreach (var item in Lessons)
+                            {
+                                <div class="card" style="margin:2px;">
+                                    <div class="card-body">
+                                        <h5><a target="_blank" href="@item.Video"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.LessonName</a></h5>
+                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </div>
-                        <div class="col-md-4 mb-4">
-                            <div class="card border-start-info py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col me-2">
-                                            <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>Storage</span></div>
-                                            <div class="row g-0 align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="text-dark fw-bold h5 mb-0 me-3"><span>50%</span></div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm">
-                                                        <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"><span class="visually-hidden">50%</span></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                        <div class="tab-pane" role="tabpanel" id="tab-2">
+                            @if (Resources.Count() == 0)
+                            {
+                                <p>No data available.</p>
+                            }
+                            @foreach (var item in Resources)
+                            {
+                                <div class="card" style="margin:2px;">
+                                    <div class="card-body">
+                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
+                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </div>
-                  
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 mb-4">
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="text-primary fw-bold m-0">Storage Allocation</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small fw-bold">Lessons<span class="float-end">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">PDF<span class="float-end">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">PPT(presentation files)<span class="float-end">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="visually-hidden">60%</span></div>
-                                    </div>
-                                    <h4 class="small fw-bold">Documents<span class="float-end">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"><span class="visually-hidden">80%</span></div>
+                        <div class="tab-pane" role="tabpanel" id="tab-3">
+                            @if (Assignments.Count() == 0)
+                            {
+                                <p>No data available.</p>
+                            }
+                            @foreach (var item in Assignments)
+                            {
+                                <div class="card" style="margin:2px;">
+                                    <div class="card-body">
+                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
+                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
                                     </div>
                                 </div>
-                            </div>
-                           
+                            }
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="tab-4">
+                            @if (Attendances.Count() == 0)
+                            {
+                                <p>No data available.</p>
+                            }
+                            @foreach (var item in Attendances)
+                            {
+                                <div class="card" style="margin:2px;">
+                                    <div class="card-body">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 fw-bold">Students Info - @Attendances.Count() </p>
+                                        </div>
+                                        <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                            <table class="table my-0" id="dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Matric No</th>
+                                                        <th>First Name</th>
+                                                        <th>Last Name</th>
+                                                        <th>Department</th>
+                                                        <th>Date</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+
+                                                        <td>@(Key++)</td>
+                                                        <td>@item.MatricNo</td>
+                                                        <td>@item.FirstName</td>
+                                                        <td>@item.LastName</td>
+                                                        <td>@item.Department</td>
+                                                        <td>@item.DateTime</td>
+                                                    </tr>
+
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>No</th>
+                                                        <th>Matric No</th>
+                                                        <th>First Name</th>
+                                                        <th>Last Name</th>
+                                                        <th>Department</th>
+                                                        <th>Date</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
-           
-   
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public Lecture lect = new();
+    public List<Lesson> Lessons = new();
+    public List<Resource> Resources = new();
+    public List<Assignment> Assignments = new();
+    public List<Attendance> Attendances = new();
+    public int Key = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+    }
+
+    async Task GetAll()
+    {
+        try
+        {
+            lect = await _db.Lecture.FindAsync(Guid.Parse(Id));
+            Lessons = await _db.Lesson.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Resources = await _db.Resource.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Assignments = await _db.Assignment.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Attendances = await _db.Attendance.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+}

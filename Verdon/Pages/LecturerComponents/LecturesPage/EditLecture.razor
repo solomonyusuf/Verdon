@@ -1,4 +1,4 @@
-﻿@page "/add/lecture"
+﻿@page "/edit/lecture/{Id}"
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
 @inject NavigationManager router
@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-body">
             <EditForm Model="@lect" OnSubmit="@Post" class="card-body">
-                <h1><b>Add Lecture</b></h1><br />
+                <h1><b>Edit Lecture</b></h1><br />
                 <div class="col-md-6 form-group">
                     <InputText @bind-Value="@lect.LectureName" type="text" class="form-control form-control-lg" placeholder="ENTER LECTURE NAME" required />
                 </div>
@@ -26,16 +26,20 @@
 </div>
 
 @code {
+    [Parameter]
+    public string Id { get; set; }
     public Lecture lect = new();
 
 
+    protected override async Task OnInitializedAsync()
+    {
+        lect = await _db.Lecture.FindAsync(Guid.Parse(Id));
+    }
+
     async Task Post()
     {
-        var e = await _db.Lecture.AddAsync(lect);
+        _db.Lecture.Update(lect);
         await _db.SaveChangesAsync();
-        router.NavigateTo($"/modify/lecture/{e.Entity.LectureId}");
+        router.NavigateTo($"/modify/lecture/{Id}");
     }
 }
-
-
-
