@@ -1,9 +1,208 @@
 ﻿@page "/alllecture"
 @layout _LecturerLayout
+ 
+<div class="container-fluid">
+    <h3 class="text-dark mb-4">Database Staffs &nbsp;<a class="btn btn-outline-primary" href="/add/staff">Add Staff</a></h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Staffs Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">
+                            <EditForm Model="prop">
+                                <InputSelect @bind-Value="@prop.Count" @onchange="GetAll" class="d-inline-block form-select form-select-sm">
+                                    <option value="0" @onclick="@GetAll" selected="selected">All</option>
+                                    @foreach (var item in Ops)
+                                    {
+                                        <option @onclick="@Take" value="@item">@item</option>
+                                    }
+                                </InputSelect>
+                            </EditForm>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <EditForm Model="@search" class="text-md-end" id="dataTable_filter">
+                        <label class="form-label">
+                            <InputText type="search" @bind-Value="@search.input" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search" />
+                        </label>
+                        <button @onclick="@GetAll" class="btn btn-info"><i class="fa fa-search"></i></button>
+                        <button @onclick="@Refresh" class="btn btn-warning"><i class="fa fa-refresh"></i></button>
+                    </EditForm>
+                </div>
+            </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid">
+                <table class="table my-0 text-dark" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Lecture Name</th>
+                            <th>ID</th>
+                            <th>Password</th>
+                            <th>Date</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody style="height:700px;overflow-y:scroll;">
+                        @if (model.Count() == 0)
+                        {
+                            <tr>
+                                <td><h5 align="center">No data available</h5></td>
+                            </tr>
+                        }
+                        @foreach (var item in model)
+                        {
+                            <tr>
+                                <td>@(Key++)</td>
+                                <td>@item.StaffId</td>
+                                <td>
+                                    <a href="@item.Image"><img class="rounded-circle me-2" width="30" height="30" src="@item.Image" /></a>
+                                    &nbsp;<strong>@item.FirstName &nbsp; @item.LastName &nbsp; @item.MiddleName</strong>
+                                </td>
+                                <td>@item.Sex</td>
+                                <td>@item.DOB</td>
+                                <td>@item.Bank - @item.Account_Name - @item.Account_No</td>
+                                <td>@item.PhoneNo_1</td>
+                                <td><a class="btn btn-outline-primary" href="/staff/detail/@item.StaffId"><i class="fa fa-edit"></i></a></td>
+                                <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
+                            </tr>
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                     <th>No</th>
+                    <th>Lecture Name</th>
+                    <th>ID</th>
+                    <th>Password</th>
+                    <th>Date</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
 
 
- <div class="container-fluid" data-aos="zoom-out">
-              
-  </div>
-           
-   
+        </div>
+    </div>
+</div>
+
+
+@code {
+    public List<Lecture> model = new();
+    public Props prop = new();
+    public int Key = 1;
+    public class Props
+    {
+        public int Count { get; set; }
+
+    }
+    public Search search = new();
+    public class Search
+    {
+        public string input { get; set; }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+    }
+
+    public List<int> Ops = new List<int> { 10, 25, 50, 100 };
+
+    [HttpGet]
+    public async Task GetAll()
+    {
+        try
+        {
+            var req = await _db.Staffs.ToListAsync();
+            Key = 1;
+            if (search.input != null)
+            {
+
+                model = req.Where(x =>
+                    x.StaffId.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.FirstName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.LastName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.MiddleName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
+                ).ToList();
+            }
+            else
+            {
+                model = req;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+
+    [HttpGet]
+    public async Task Refresh()
+    {
+        try
+        {
+            Key = 1;
+            var req = await _db.Staffs.ToListAsync();
+            model = req;
+
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+
+    void Take()
+    {
+        try
+        {
+            var req = model;
+            if (prop.Count != 0)
+            {
+                model = req.Take(prop.Count).ToList();
+                Key = 1;
+            }
+            else
+            {
+                model = req;
+                Key = 1;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+
+    [HttpDelete]
+    public async Task Remove(Staff s)
+    {
+        try
+        {
+            _db.Staffs.Remove(s);
+            await _db.SaveChangesAsync();
+            await GetAll();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+    }
+}
