@@ -1,12 +1,13 @@
 ﻿@page "/modify/lecture/{Id}"
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
+@inject UploadController _upload
 
-<div class="row" data-aos="zoom-out">
+<div class="row" data-aos="zoom-out" style="margin:4px;">
     <div class="col-md-8">
             <div class="card shadow">
             <div class="card-body">
-                <div class="card" style="background-image:url('assets/img/portfolio/product-1.jpg');height:200px;">
+                <div class="card" style="background-image:url('assets/img/portfolio/product-1.jpg');height:150px;">
                     <div class="card-body">
                         <h3>@lect.CourseCode : @lect.LectureName</h3>
                     </div>
@@ -123,7 +124,79 @@
         </div>
     </div>
     <div class="col-md-4">
+        <div class="card" style="margin:2px;">
+            <EditForm Model="@Lesson" OnSubmit="@PostLesson" class="card-body">
+                <div class="mb-3">
+                    <h3>Add Lesson</h3>
+                </div>
+                <div class="mb-3">
+                    <p>NOTE: <i>file must not excced 30MB, patiently load file.</i></p>
+                    </div>
+                <div class="form-group">
+                    <InputFile OnChange="@UploadLesson" type="file" class="form-control form-control-lg"  />
+                </div>
+                @if (bind == "lesson")
+                {
+                    <div class="progress">
+                        <div class="progress-bar" aria-valuenow="@counter" aria-valuemin="0" aria-valuemax="100" style="width:@(counter/25 * 100)%;">@(counter / 25 * 100)%</div>
+                    </div><br />
+                }
+                <div class="form-group">
+                    <InputText @bind-Value="@Lesson.LessonName" placeholder="ENTER LESSON NAME" type="text" class="form-control form-control-lg" />
+                </div>
+                <div class="form-group" align="center">
+                    <button class="btn btn-info btn-lg w-50" type="submit">SUBMIT</button>
+                </div>
+            </EditForm>
+        </div>
+        <div class="card" style="margin:2px;">
+            <EditForm Model="@Resource" OnSubmit="@PostResource" class="card-body">
+                <div class="mb-3">
+                    <h3>Add Resource</h3>
+                </div>
+                <div class="mb-3">
+                    <p>NOTE: <i>file must not excced 30MB, patiently load file.</i></p>
+                </div>
+                <div class="form-group">
+                    <InputFile OnChange="@UploadResource" type="file" class="form-control form-control-lg" />
+                </div>
+                @if(bind == "resource")
+                {
+                    <div class="progress">
+                        <div class="progress-bar" aria-valuenow="@counter" aria-valuemin="0" aria-valuemax="100" style="width:@(counter/25 * 100)%;">@(counter / 25 * 100)%</div>
+                    </div>
 
+                    <br />
+                }
+                <div class="form-group" align="center">
+                    <button class="btn btn-info btn-lg w-50" type="submit">SUBMIT</button>
+                </div>
+            </EditForm>
+        </div>
+        <div class="card" style="margin:2px;">
+            <EditForm Model="@Assignment" OnSubmit="@PostAssignment" class="card-body">
+                <div class="mb-3">
+                    <h3>Add Assignment</h3>
+                </div>
+                <div class="mb-3">
+                    <p>NOTE: <i>file must not excced 30MB, patiently load file.</i></p>
+                </div>
+                <div class="form-group">
+                    <InputFile OnChange="@UploadAssignment" type="file" class="form-control form-control-lg" />
+                </div>
+                @if (bind == "sssignment")
+                {
+                    <div class="progress">
+                        <div class="progress-bar" aria-valuenow="@counter" aria-valuemin="0" aria-valuemax="100" style="width:@(counter/25 * 100)%;">@(counter / 25 * 100)%</div>
+                    </div>
+
+                    <br />
+                }
+                <div class="form-group" align="center">
+                    <button class="btn btn-info btn-lg w-50" type="submit">SUBMIT</button>
+                </div>
+            </EditForm>
+        </div>
     </div>
 </div>
 
@@ -135,7 +208,14 @@
     public List<Resource> Resources = new();
     public List<Assignment> Assignments = new();
     public List<Attendance> Attendances = new();
+    public Lesson Lesson = new();
+    public Resource Resource = new();
+    public Assignment Assignment = new();
+    public Attendance Attendance = new();
+    System.Timers.Timer aTimer = new System.Timers.Timer(1000);
     public int Key = 1;
+    public int counter = 0;
+    public string bind;
 
     protected override async Task OnInitializedAsync()
     {
@@ -151,10 +231,169 @@
             Resources = await _db.Resource.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
             Assignments = await _db.Assignment.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
             Attendances = await _db.Attendance.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Key = 1;
+            bind = null;
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
         }
+    }
+
+    async Task PostLesson()
+    {
+        try
+        {
+            Lesson.LectureId = Guid.Parse(Id);
+            await _db.Lesson.AddAsync(Lesson);
+            await _db.SaveChangesAsync();
+            await GetAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    async Task PostResource()
+    {
+        try
+        {
+            Resource.LectureId = Guid.Parse(Id);
+            await _db.Resource.AddAsync(Resource);
+            await _db.SaveChangesAsync();
+            await GetAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    async Task PostAssignment()
+    {
+        try
+        {
+            Assignment.LectureId = Guid.Parse(Id);
+            await _db.Assignment.AddAsync(Assignment);
+            await _db.SaveChangesAsync();
+            await GetAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    async Task RemoveLesson()
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    async Task RemoveResource()
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    async Task RemoveAssignment()
+    {
+        try
+        {
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async Task UploadLesson(InputFileChangeEventArgs args)
+    {
+        try
+        {
+            bind = "lesson";
+            StartTimer();
+            var file = args.File;
+            Lesson.Size = (file.Size / (1024)).ToString();
+            Lesson.Video = $"wwwroot\\StaticFiles\\{file.Name}";
+            await _upload.Upload(file);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async Task UploadResource(InputFileChangeEventArgs args)
+    {
+        try
+        {
+            bind = "resource";
+            StartTimer();
+            var file = args.File;
+            Resource.ResourceName = file.Name;
+            Resource.Size = (file.Size / (1024)).ToString();
+            Resource.File = $"wwwroot\\StaticFiles\\{file.Name}";
+            await _upload.Upload(file);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    public async Task UploadAssignment(InputFileChangeEventArgs args)
+    {
+        try
+        {
+            bind = "assignment";
+            StartTimer();
+            var file = args.File;
+            Assignment.Title = file.Name;
+            Assignment.Size = (file.Size / (1024)).ToString();
+            Assignment.File = $"wwwroot\\StaticFiles\\{file.Name}";
+            await _upload.Upload(file);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    void StartTimer()
+    {
+
+        aTimer.Elapsed += CountDownTimer;
+        aTimer.Enabled = true;
+    }
+    async void CountDownTimer(Object source, ElapsedEventArgs e)
+    {
+        if (counter < 25)
+        {
+            counter += 1;
+        }
+        else
+        {
+            aTimer.Enabled = false;
+        }
+        await InvokeAsync(StateHasChanged);
     }
 }

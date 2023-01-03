@@ -65,7 +65,7 @@
                                 <td>@item.Password</td>
                                 <td>@item.DateTime</td>
                                 <td>@item.LectureName</td>
-                                <td><a class="btn btn-info" href="/lecture/detail/@item.LectureId"><i class="fa fa-edit"></i></a></td>
+                                <td><a class="btn btn-info" href="/modify/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
                                 <td><a class="btn btn-outline-primary" href="/edit/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
                                 <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
                             </tr>
