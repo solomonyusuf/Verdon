@@ -23,12 +23,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\LecturerComponents\" />
     <Folder Include="wwwroot\StaticFiles\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Downloads\Verdon.Core\Verdon.Core.csproj" />
+    <ProjectReference Include="..\Verdon.Core\Verdon.Core.csproj" />
   </ItemGroup>
 
 </Project>

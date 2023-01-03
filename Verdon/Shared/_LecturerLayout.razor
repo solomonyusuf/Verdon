@@ -28,13 +28,48 @@
     <!-- Template Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet">
 </head>
-   
-  <section>
+
+<header id="header" style="background-color:white;" class="header fixed-top" data-scrollto-offset="0">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+
+        <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+            
+            <p><h1>Ver<span>don</span></h1><sub><small class="text-dark">LECTURER</small></sub></p>
+        </a>
+
+        <nav id="navbar" class="navbar">
+            <ul>
+
+                <li class="dropdown"><a href="#"><span>Quiz</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                <ul>
+                        <li><NavLink href="/allquiz">All Quiz</NavLink></li>
+                        <li><NavLink href="/add/quiz">Add Quiz</NavLink></li>
+                </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#"><span>Lecture</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                    <ul>
+                        <li><NavLink href="/alllecture">All Lecture</NavLink></li>
+                        <li><NavLink href="/add/lecture">Add Lecture</NavLink></li>
+                    </ul>
+                </li>
+                <li><NavLink class="nav-link scrollto" href="/socical">Socical</NavLink></li>
+                
+          
+               
+            </ul>
+            <LoginDisplay/>
+            <i class="bi bi-list mobile-nav-toggle d-none"></i>
+        </nav><!-- .navbar -->
+
+    </div>
+</header><!-- End Header -->
+
+<section style="margin-top:30px;">
     <main id="main">
         @Body
     </main>
   </section>
 
-  
   
   
