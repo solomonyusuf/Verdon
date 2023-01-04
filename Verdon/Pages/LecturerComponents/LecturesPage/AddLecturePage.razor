@@ -2,7 +2,7 @@
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
 @inject NavigationManager router
-
+@inject UserService _usr
 <div class="container-fluid col-lg-8" data-aos="zoom-out">
     <div class="card">
         <div class="card-body">
@@ -27,10 +27,16 @@
 
 @code {
     public Lecture lect = new();
-
+    public string Id;
+    protected override async Task OnInitializedAsync()
+    {
+        var e = await _usr.CurrentUser();
+        Id = e.Id;
+    }
 
     async Task Post()
     {
+        lect.UserId = Id;
         var e = await _db.Lecture.AddAsync(lect);
         await _db.SaveChangesAsync();
         router.NavigateTo($"/modify/lecture/{e.Entity.LectureId}");

@@ -1,4 +1,5 @@
-@inject SignInManager<IdentityUser> SignInManager
+@using Verdon.Core.Base
+@inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

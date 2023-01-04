@@ -11,9 +11,9 @@ namespace Verdon.Services
     public class UserService
     {
         public readonly IHttpContextAccessor _cont;
-        public readonly UserManager<IdentityUser> _user;
+        public readonly UserManager<User> _user;
         public readonly ApplicationDbContext _db;
-        public UserService(IHttpContextAccessor cont, UserManager<IdentityUser> user, ApplicationDbContext db)
+        public UserService(IHttpContextAccessor cont, UserManager<User> user, ApplicationDbContext db)
         {
             _cont = cont;
             _user = user;
@@ -22,8 +22,8 @@ namespace Verdon.Services
         public async Task<User> CurrentUser()
         {
             var res = _cont.HttpContext.User.Identity.Name;
-            var usr = await _db.User.Where(x => x.Email.Equals(res)).SingleAsync();
-            return usr;
+            var usr = await _db.User.Where(x => _cont.HttpContext.User.Identity.Name.Equals(x.Email)).ToListAsync();
+            return usr[0];
         }
     }
 }

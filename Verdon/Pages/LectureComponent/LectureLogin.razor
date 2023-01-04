@@ -11,7 +11,7 @@
                 <p>@val</p>
             }
             <div class="col-md-6 form-group">
-                <InputText @bind-Value="@Id" type="text" class="form-control form-control-lg" placeholder="ENTER lECTURE PASS/ID" required />
+                <InputText @bind-Value="@Id" type="text" class="form-control form-control-lg" placeholder="ENTER LECTURE PASS/ID" required />
             </div>
             <div class="col-md-6 form-group mt-3 mt-md-0">
                 <InputText @bind-Value="@Pwd" type="password" class="form-control form-control-lg" placeholder="ENTER PASSWORD" required />
@@ -34,7 +34,7 @@
             var req = await _db.Lecture.Where(x => x.LecturePass == int.Parse(Id)).SingleAsync();
             if (req.Password.Equals(Pwd))
             {
-                router.NavigateTo($"/quiz/instruction/{req.LectureId}");
+                router.NavigateTo($"/lecture/detail/{req.LectureId}");
             }
             else
             {

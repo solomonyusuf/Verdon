@@ -31,6 +31,9 @@
                                     <div class="card-body">
                                         <h5><a target="_blank" href="@item.Video"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.LessonName</a></h5>
                                         <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        <div class="mb-3" align="center">
+                                            <button @onclick="@(()=>  RemoveLesson(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Lesson</button>
+                                        </div>
                                     </div>
                                 </div>
                             }
@@ -44,8 +47,11 @@
                             {
                                 <div class="card" style="margin:2px;">
                                     <div class="card-body">
-                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
+                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
                                         <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        <div class="mb-3" align="center">
+                                            <button @onclick="@(()=>  RemoveResource(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Resource</button>
+                                        </div>
                                     </div>
                                 </div>
                             }
@@ -59,8 +65,11 @@
                             {
                                 <div class="card" style="margin:2px;">
                                     <div class="card-body">
-                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
+                                        <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
                                         <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        <div class="mb-3" align="center">
+                                            <button @onclick="@(()=> RemoveAssignment(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Asssignment</button>
+                                        </div>
                                     </div>
                                 </div>
                             }
@@ -184,7 +193,7 @@
                 <div class="form-group">
                     <InputFile OnChange="@UploadAssignment" type="file" class="form-control form-control-lg" />
                 </div>
-                @if (bind == "sssignment")
+                @if (bind == "assignment")
                 {
                     <div class="progress">
                         <div class="progress-bar" aria-valuenow="@counter" aria-valuemin="0" aria-valuemax="100" style="width:@(counter/25 * 100)%;">@(counter / 25 * 100)%</div>
@@ -231,7 +240,11 @@
             Resources = await _db.Resource.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
             Assignments = await _db.Assignment.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
             Attendances = await _db.Attendance.Where(x => x.LectureId == Guid.Parse(Id)).ToListAsync();
+            Lesson = new Lesson();
+            Resource = new Resource();
+            Assignment = new Assignment();
             Key = 1;
+            counter = 0;
             bind = null;
         }
         catch (Exception e)
@@ -287,11 +300,14 @@
         }
     }
 
-    async Task RemoveLesson()
+    async Task RemoveLesson(Lesson l)
     {
         try
         {
-
+            File.Delete(l.Video);
+            _db.Lesson.Remove(l);
+            await _db.SaveChangesAsync();
+            await GetAll();
         }
         catch (Exception e)
         {
@@ -300,11 +316,14 @@
     }
 
 
-    async Task RemoveResource()
+    async Task RemoveResource(Resource r)
     {
         try
         {
-
+            File.Delete(r.File);
+            _db.Resource.Remove(r);
+            await _db.SaveChangesAsync();
+            await GetAll();
         }
         catch (Exception e)
         {
@@ -313,11 +332,14 @@
     }
 
 
-    async Task RemoveAssignment()
+    async Task RemoveAssignment(Assignment a)
     {
         try
         {
-
+            File.Delete(a.File);
+            _db.Assignment.Remove(a);
+            await _db.SaveChangesAsync();
+            await GetAll();
         }
         catch (Exception e)
         {
@@ -332,6 +354,7 @@
             bind = "lesson";
             StartTimer();
             var file = args.File;
+            Lesson.LessonName = file.Name;
             Lesson.Size = (file.Size / (1024)).ToString();
             Lesson.Video = $"wwwroot\\StaticFiles\\{file.Name}";
             await _upload.Upload(file);

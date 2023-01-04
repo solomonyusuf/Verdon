@@ -5,7 +5,7 @@ namespace Verdon.Services
 {
     public class SeedService
     {
-        public static void SeedData(UserManager<IdentityUser> userManager, RoleManager<Role> roleManager)
+        public static void SeedData(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
@@ -14,13 +14,13 @@ namespace Verdon.Services
 
 
         public static void SeedUsers
-    (UserManager<IdentityUser> userManager)
+    (UserManager<User> userManager)
         {
 
             if (userManager.FindByNameAsync
                   ("admin@gmail.com").Result == null)
             {
-                IdentityUser user = new IdentityUser();
+                var user = new User();
                 user.UserName = "admin@gmail.com";
                 user.Email = "admin@gmail.com";
                 user.EmailConfirmed = true;
@@ -37,7 +37,7 @@ namespace Verdon.Services
             if (userManager.FindByNameAsync
                    ("olafire03@gmail.com").Result == null)
             {
-                IdentityUser user = new IdentityUser();
+                var user = new User();
                 user.UserName = "olafire03@gmail.com";
                 user.Email = "olafire03@gmail.com";
                 user.EmailConfirmed = true;
