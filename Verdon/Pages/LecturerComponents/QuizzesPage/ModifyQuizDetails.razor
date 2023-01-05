@@ -1,0 +1,259 @@
+﻿@page "/modify/quiz/{Id}"
+@layout _LecturerLayout
+@inject ApplicationDbContext _db
+@inject UploadController _upload
+@inject UserService _usr
+
+ 
+<div class="row" data-aos="zoom-out" style="margin:4px;">
+    <div class="col-md-4" style="height:1000px;overflow-y:scroll;">
+        <div class=" card shadow static-top" style="margin-top:3px;">
+            <EditForm Model="@question" class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>Add Question</strong>
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">
+                        <small><i>NOTE: add other options and answers before submitting the question. if question require image, add image if not leave blank.</i></small>
+                    </label>
+                </div>
+                @if (question.Image != null)
+                {
+                  <div class="mb-3">
+                 <a href="@question.Image" target="_blank"><img src="@question.Image" class="img-fluid" style="height:300px;width:400px;"  /></a>
+                </div>
+                }
+                <div class="mb-3">
+                    <InputFile class="form-control" OnChange="@Upload" type="file" />
+                </div>
+                <div class="mb-3">
+                    <InputTextArea @bind-Value="@question.Title" placeholder="Enter question title" class="form-control" type="text" />
+                </div>
+                <div class="mb-3">
+                    <InputText @bind-Value="@question.Answer" placeholder="Enter answer alphabet" class="form-control" type="text" />
+                </div>
+
+            </EditForm>
+        </div>
+        <div class=" card shadow static-top" style="margin-top:3px;">
+            <EditForm Model="@option" OnSubmit="AddOption" class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>Option Inputs</strong>
+                    </label>
+                </div>
+                @if (options.Count() == 0)
+                {
+                    <div class="mb-3">
+                        <p align="center" style="color:red;">No options added</p>
+                    </div>
+                }
+
+                <ul>
+                    @foreach (var item in options)
+                    {
+
+                        <li>
+                            <p align="center" class="btn btn-outline-primary w-50">(@item.Alphabet)&nbsp;@item.Content</p>
+                        </li>
+
+                    }
+                    <div class="mb-3">
+                        <button align="center" type="submit" @onsubmit="@ClearOption" class="btn btn-primary w-50">CLEAR</button>
+                    </div>
+                </ul>
+                <div class="mb-3">
+                    <label class="form-label">
+                        <strong>Add Option</strong>
+                    </label>
+                </div>
+
+                <div class="mb-3">
+                    <InputText @bind-Value="@option.Content" placeholder="Enter option Content" class="form-control" type="text" />
+                </div>
+                <div class="mb-3">
+                    <InputText @bind-Value="@option.Alphabet" placeholder="Enter option alphabet" class="form-control" type="text" />
+                </div>
+                <div class="mb-3">
+                    <button align="center" type="submit" class="btn btn-primary w-50">Add Option</button>
+                </div>
+            </EditForm>
+
+            <div class="mb-3" align="center">
+                <button  type="submit" @onclick="@PostQuestion" class="btn btn-info w-50">SUBMIT ALL</button>
+            </div>
+        </div>
+        
+    </div>
+
+
+
+    <div class="card shadow col-md-8" style="height:1000px;overflow-y:scroll;">
+        <div class="card-body">
+            <h5 align="center">Questions for @quiz.Title - @questions.Count() questions</h5>
+            @if (questions.Count() == 0)
+            {
+                <h5 align="center" style="color:red;"> No available questions</h5>
+            }
+            @foreach (var item in questions)
+            {
+                <div class="jumbotron">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <p>
+                                <strong>@(Key++).&nbsp;</strong>
+                                    <i>
+                                        @item.Title
+                                    </i>
+                            </p>
+                            @if (item.Image != null)
+                            {
+                                <div class="mb-3">
+                                    <a href="@item.Image" target="_blank"><img src="@item.Image" class="img-fluid" style="height:300px;width:400px;" /></a>
+                                </div>
+                            }
+                            <ul>
+                                @foreach (var o in @item.Options)
+                                {
+                                    <li><p><input type="checkbox" />&nbsp;(@o.Alphabet)&nbsp;@o.Content</p></li>
+                                }
+
+                            </ul>
+                            @*<a class="btn btn-outline-primary" href=""><i class="fa fa-edit"></i>&nbsp;Edit question</a>*@
+                            <button class="btn btn-danger" @onclick="@(()=> DeleteQuestion(item))"><i class="fa fa-remove"></i>&nbsp;Remove Question</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public int Key = 1;
+    public PrivateQuiz quiz = new();
+    public PrivateQuestion question = new();
+    public PrivateOption option = new();
+    public List<PrivateOption> options = new();
+    public List<PrivateQuestion> questions = new();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAll();
+    }
+
+
+    public async Task GetAll()
+    {
+        try
+        {
+            quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(Id));
+            questions = await _db.PrivateQuestion.Where(x => x.PrivateQuizId == Guid.Parse(Id)).Include(x => x.Options).ToListAsync();
+            option = new PrivateOption();
+            question = new PrivateQuestion();
+            options.Clear();
+            Key = 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+
+    public async Task PostQuestion()
+    {
+        try
+        {
+            Key = 1;
+            question.PrivateQuizId = Guid.Parse(Id);
+            var r = await _db.PrivateQuestion.AddAsync(question);
+            await _db.SaveChangesAsync();
+            await PostOption(r.Entity.PrivateQuestionId);
+            await GetAll();
+            Key = 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+
+    public async Task PostOption(Guid I)
+    {
+        try
+        {
+            Key = 1;
+            foreach (var item in options)
+            {
+                item.PrivateQuestionId = I;
+                await _db.PrivateOption.AddAsync(item);
+                await _db.SaveChangesAsync();
+            }
+            Key = 1;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    void AddOption()
+    {
+        var input = new PrivateOption() { Content = option.Content, Alphabet = option.Alphabet };
+        options.Add(input);
+        option = new PrivateOption();
+        Key = 1;
+
+    }
+    void ClearOption()
+    {
+        options.Clear();
+        options = new List<PrivateOption>();
+        option = new PrivateOption();
+        Key = 1;
+
+    }
+
+
+    public async Task DeleteQuestion(PrivateQuestion Q)
+    {
+        try
+        {
+            Key = 1;
+            if(Q.Image != null)
+                File.Delete(Q.Image);
+            _db.PrivateQuestion.Remove(Q);
+            await _db.SaveChangesAsync();
+            await GetAll();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    public async Task Upload(InputFileChangeEventArgs args)
+    {
+        try
+        {
+            var file = args.File;
+            await _upload.Upload(file);
+            question.Image = $"wwwroot\\StaticFiles\\{file.Name}";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+}
+

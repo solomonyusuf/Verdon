@@ -190,8 +190,7 @@
             user = await _user.CurrentUser();
             quiz = await _context.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
             questions = await _context.PrivateQuestion.Where(x => x.PrivateQuizId == Guid.Parse(QuizId)).ToListAsync();
-            track = await _context.Track.FindAsync(UserId);
-
+           // track = await _context.Track.Where(x => x.TrackId == UserId).SingleAsync();
         }
         catch(Exception e)
         {
@@ -316,10 +315,11 @@
     {
         try
         {
-            var a = track.DateTime - DateTime.Now;
+           
+            var a = track.DateTime.AddMinutes(quiz.Duration) - DateTime.Now;
             var d = Math.Round(a.TotalSeconds, 0, 0);
             counter = Convert.ToInt32(d);
-            if (DateTime.Now.ToShortTimeString() == track.DateTime.ToShortTimeString())
+            if (DateTime.Now.ToShortTimeString() == track.DateTime.AddMinutes(quiz.Duration).ToShortTimeString())
             {
                 EndAttempt();
             }

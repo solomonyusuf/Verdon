@@ -4,7 +4,7 @@
 @inject UserService _usr
 
 
-<section style="margin-top:30px;">
+<section data-aos="zoom-out">
     <div class="card shadow" style="text-align: left">
         <div class="card-body" style="box-shadow: 0px 0px;">
             <h4 class="card-title" style="text-align: center;font-weight: bold;">@quiz.Title.</h4>
@@ -44,11 +44,11 @@
     public User user = new();
     public Track track = new();
     public PrivateQuiz quiz = new();
-
+    public string su;
     protected override async Task OnInitializedAsync()
     {
         await GetAll();
- 
+
     }
     async Task GetAll()
     {
@@ -56,15 +56,16 @@
         {
             user = await _usr.CurrentUser();
             quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
-            track = await _db.Track.FindAsync(user.Id);
-           if(track != null)
-           {
-                if (track.DateTime < DateTime.Now)
+            var r = await _db.Track.FindAsync(user.Id);
+            if(r  != null)
+            {
+               
+                if (r.DateTime < DateTime.Now)
                 {
-                    _db.Track.Remove(track);
+                    _db.Track.Remove(r);
                     await _db.SaveChangesAsync();
                 }
-           }
+            }
 
         }
         catch (Exception e)
@@ -77,15 +78,11 @@
     {
         try
         {
-            track.TrackId = user.Id;
-            track.QId = QuizId;
-            if (track.QId != QuizId)
-            {
+                track.TrackId = user.Id;
+                track.QId = QuizId;
                 await _db.Track.AddAsync(track);
-                await _db.SaveChangesAsync();
-                
-            }
-            router.NavigateTo($"/private/quiz/page/{QuizId}/{user.Id}");
+                await _db.SaveChangesAsync();    
+                router.NavigateTo($"/private/quiz/page/{QuizId}/{user.Id}");
         }
         catch (Exception e)
         {

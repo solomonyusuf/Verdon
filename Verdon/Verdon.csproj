@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\LecturerComponents\QuizzesPage\" />
     <Folder Include="wwwroot\StaticFiles\" />
   </ItemGroup>
 

@@ -20,7 +20,7 @@ namespace Verdon.Services
         {
             try
             {
-                var file = seed.OpenReadStream(30000000);
+                var file = seed.OpenReadStream(50000000);
                 var folderName = Path.Combine("wwwroot", "StaticFiles");
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
 

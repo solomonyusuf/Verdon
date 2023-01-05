@@ -31,7 +31,7 @@
     {
         try
         {
-            var req = await _db.PrivateQuiz.Where(x => x.QuizId == int.Parse(Id)).SingleAsync();
+            var req = await _db.PrivateQuiz.Where(x => x.QuizId == int.Parse(Id) && x.Visible == true).SingleAsync();
             if(req.Password.Equals(Pwd))
             {
                 router.NavigateTo($"/quiz/instruction/{req.PrivateQuizId}");

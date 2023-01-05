@@ -1,5 +1,8 @@
 ﻿@page "/dashboard"
 @layout _LecturerLayout
+@inject ApplicationDbContext _db
+@inject UserService _usr
+
 
 <div class="container-fluid" data-aos="zoom-out">
                     <div class="row">
@@ -9,7 +12,7 @@
                                 <div class="row align-items-center no-gutters">
                                     <div class="col me-2">
                                         <div class="text-uppercase text-success fw-bold text-xs mb-1"><span>Lectures</span></div>
-                                        <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
+                                        <div class="text-dark fw-bold h5 mb-0"><span>@lectures.Count()</span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
                                 </div>
@@ -22,7 +25,7 @@
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
                                             <div class="text-uppercase text-success fw-bold text-xs mb-1"><span> Quizzes</span></div>
-                                            <div class="text-dark fw-bold h5 mb-0"><span>$215,000</span></div>
+                                            <div class="text-dark fw-bold h5 mb-0"><span>@quiz.Count()</span></div>
                                         </div>
                                         <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
                                     </div>
@@ -34,14 +37,14 @@
                                 <div class="card-body">
                                     <div class="row align-items-center no-gutters">
                                         <div class="col me-2">
-                                            <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>Storage</span></div>
+                                            <div class="text-uppercase text-info fw-bold text-xs mb-1"><span>Storage (@(maxSpace/1000)GB)</span></div>
                                             <div class="row g-0 align-items-center">
                                                 <div class="col-auto">
-                                                    <div class="text-dark fw-bold h5 mb-0 me-3"><span>50%</span></div>
+                                    <div class="text-dark fw-bold h5 mb-0 me-3"><span>  @store MB </span></div>
                                                 </div>
                                                 <div class="col">
                                                     <div class="progress progress-sm">
-                                                        <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"><span class="visually-hidden">50%</span></div>
+                                        <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="@maxSpace" style="width: @((store * 100)/maxSpace)%;"><span class="visually-hidden">50%</span></div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -59,23 +62,21 @@
                                 <div class="card-header py-3">
                                     <h6 class="text-primary fw-bold m-0">Storage Allocation</h6>
                                 </div>
-                                <div class="card-body">
-                                    <h4 class="small fw-bold">Lessons<span class="float-end">20%</span></h4>
+                <div class="card-body">
+   
+                    <h4 class="small fw-bold">Lessons<span class="float-end">@((lesson * 100) / maxSpace) %</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
+                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="@maxSpace" style="width: @((lesson * 100)/maxSpace)%;"></div>
                                     </div>
-                                    <h4 class="small fw-bold">PDF<span class="float-end">40%</span></h4>
+                    <h4 class="small fw-bold">Assignments<span class="float-end">@((assig * 100) / maxSpace) %</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span></div>
+                        <div class="progress-bar bg-warning" aria-valuenow="40" aria-valuemin="0" aria-valuemax="@maxSpace" style="width: @((assig * 100)/maxSpace)%;"></div>
                                     </div>
-                                    <h4 class="small fw-bold">PPT(presentation files)<span class="float-end">60%</span></h4>
+                    <h4 class="small fw-bold">Resources<span class="float-end">@((resor * 100) / maxSpace) %</span></h4>
                                     <div class="progress mb-4">
-                                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="visually-hidden">60%</span></div>
+                        <div class="progress-bar bg-primary" aria-valuenow="60" aria-valuemin="0" aria-valuemax="@maxSpace" style="width: @((resor * 100)/maxSpace)%;"></div>
                                     </div>
-                                    <h4 class="small fw-bold">Documents<span class="float-end">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"><span class="visually-hidden">80%</span></div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                            
@@ -83,4 +84,46 @@
                     </div>
                 </div>
            
-   
+@code{
+
+    public List<Lecture> lectures = new();
+    public List<PrivateQuiz> quiz = new();
+    public string userId;
+    public long store;
+    public long lesson;
+    public long assig;
+    public long resor;
+    public long maxSpace = 2000;
+    protected override async Task OnInitializedAsync()
+    {
+        var e = await _usr.CurrentUser();
+        userId = e.Id;
+        await GetAll();
+    }
+
+    async Task GetAll()
+    {
+        try
+        {
+            lectures = await _db.Lecture.Where(x => x.UserId == userId)
+            .Include(x => x.Lessons)
+            .Include(x => x.Assignment)
+            .Include(x => x.Resources )
+            .ToListAsync();
+            quiz = await _db.PrivateQuiz.Where(x => x.UserId == userId).ToListAsync();
+            lectures.ForEach(x =>
+            {
+                store = ((x.Lessons.Select(s => int.Parse(s.Size)).Sum() + 
+                            x.Assignment.Select(s => int.Parse(s.Size)).Sum() 
+                            + x.Resources.Select(s => int.Parse(s.Size)).Sum())/1024);
+                lesson = (x.Lessons.Select(s => int.Parse(s.Size)).Sum())/1024;
+                assig = (x.Assignment.Select(s => int.Parse(s.Size)).Sum())/1024;
+                resor = (x.Resources.Select(s => int.Parse(s.Size)).Sum()/1024);
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+   }

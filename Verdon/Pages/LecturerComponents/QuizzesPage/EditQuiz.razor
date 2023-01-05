@@ -1,0 +1,65 @@
+﻿@page "/edit/quiz/{QuizId}"
+@layout _LecturerLayout
+@inject ApplicationDbContext _db
+@inject NavigationManager router
+@inject UserService _usr
+<div class="container-fluid" data-aos="zoom-out">
+    <div class="card">
+        <div class="card-body">
+            <EditForm Model="@quiz" OnSubmit="@Post" class="card-body">
+                <h1><b>Edit Quiz</b></h1><br />
+                <div class="col-md-6 form-group">
+                    <InputText @bind-Value="@quiz.Title" type="text" class="form-control form-control-lg" placeholder="ENTER QUIZ TITLE" required />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Duration</label>
+                    <InputNumber @bind-Value="@quiz.Duration" type="text" class="form-control form-control-lg" placeholder="ENTER DURATION" required />
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                    <label>Visible</label>
+                    <InputSelect @bind-Value="@val" class="form-control">
+                        @foreach (var item in new List<string>{"True", "False"})
+                        {
+                            <option value="@item">@item</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                    <label>Factor</label>
+                    <InputNumber @bind-Value="@quiz.Factor" type="password" class="form-control form-control-lg" placeholder="ENTER FACTOR" required />
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                    <InputText @bind-Value="@quiz.Password" type="password" class="form-control form-control-lg" placeholder="ENTER PASSWORD" required />
+                </div>
+                <div align="center" class="col-md-6 form-group mt-3 mt-md-0">
+                    <button class="btn btn-info w-50" type="submit">SUBMIT</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string QuizId { get; set; }
+    public PrivateQuiz quiz = new();
+    public string Id;
+    public string val;
+    protected override async Task OnInitializedAsync()
+    {
+        var e = await _usr.CurrentUser();
+        quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
+        val = quiz.Visible.ToString();
+        Id = e.Id;
+    }
+
+    async Task Post()
+    {
+        quiz.UserId = Id;
+        quiz.Visible = bool.Parse(val);
+        var e = _db.PrivateQuiz.Update(quiz);
+        await _db.SaveChangesAsync();
+        router.NavigateTo($"/allquiz");
+    }
+}
+
