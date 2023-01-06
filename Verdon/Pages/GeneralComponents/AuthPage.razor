@@ -1,0 +1,267 @@
+﻿@page "/proceed/{Id}"
+@using Verdon.Data
+@inject ApplicationDbContext _db
+@inherits LayoutComponentBase
+@inject NavigationManager router
+
+<head>
+    <link href="assets/img/favicon.png" rel="icon">
+    <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+    <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+    <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+    <!-- Variables CSS Files. Uncomment your preferred color scheme -->
+    <link href="assets/css/variables.css" rel="stylesheet">
+    <!-- <link href="assets/css/variables-blue.css" rel="stylesheet"> -->
+    <!-- <link href="assets/css/variables-green.css" rel="stylesheet"> -->
+    <!-- <link href="assets/css/variables-orange.css" rel="stylesheet"> -->
+    <!-- <link href="assets/css/variables-purple.css" rel="stylesheet"> -->
+    <!-- <link href="assets/css/variables-red.css" rel="stylesheet"> -->
+    <!-- <link href="assets/css/variables-pink.css" rel="stylesheet"> -->
+    <!-- Template Main CSS File -->
+    <link href="assets/css/main.css" rel="stylesheet">
+</head>
+
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-12 col-xl-10">
+        <div class="card shadow-lg o-hidden border-0 my-5">
+            <div class="card-body p-0">
+ 
+                    <div class="col-lg-10">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1>Ver<span style="color:rgb(43,187,208);">don.</span></h1>
+                                <h4 class="text-dark mb-4">Complete Registration</h4>
+                            </div>
+                            <hr />
+
+                            <div>
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1">User</a></li>
+                                    <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-bs-toggle="tab" href="#tab-2">Links</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" role="tabpanel" id="tab-1">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="card shadow mb-3">
+                                                    <div class="card-header py-3">
+                                                        <p class="text-primary m-0 fw-bold"> User Info </p>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <EditForm Model="@user">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>First Name</strong></label>
+                                                                        <InputText @bind-Value="@user.FirstName" class="form-control" type="text"  />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Middle Name</strong></label>
+                                                                        <InputText @bind-Value="@user.MiddleName" class="form-control" type="text"  />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Last Name</strong></label>
+                                                                        <InputText @bind-Value="@user.LastName" class="form-control" type="text"  />
+                                                                    </div>
+                                                                </div>
+              
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
+                                                                        <InputSelect class="form-control" @bind-Value="@user.Sex">
+                                                                            @foreach (var sex in new List<string> { "NULL", "MALE", "FEMALE" })
+                                                                            {
+                                                                                <option value="@sex">@sex</option>
+                                                                            }
+                                                                        </InputSelect>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
+                                                                        <InputSelect class="form-control" @bind-Value="@user.Department">
+                                                                            @foreach (var item in departments)
+                                                                            {
+                                                                                <option value="@item">@item</option>
+                                                                            }
+                                                                        </InputSelect>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Course Name</strong></label>
+                                                                        <InputText @bind-Value="@user.CourseName" class="form-control" type="text"  />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Matric No</strong></label>
+                                                                        <InputText @bind-Value="@user.MatricNo" class="form-control" type="text"  />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>DOB</strong></label>
+                                                                        <InputDate @bind-Value="@user.DOB" class="form-control" type="text" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong>Course</strong></label>
+                                                                        <InputText @bind-Value="@user.Course" class="form-control" type="text" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Email</strong></label>
+                                                                    <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
+                                                                </div>
+                                                            </div>
+                                                            
+                                                        </EditForm>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" role="tabpanel" id="tab-2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <div class="card shadow mb-3">
+                                                    <div class="card-header py-3">
+                                                        <p class="text-primary m-0 fw-bold"> Links </p>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <EditForm Model="@user">
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong><i class="fa fa-github"></i> Github</strong></label>
+                                                                        <InputText @bind-Value="@user.Github" class="form-control" placeholder="Paste link here..." type="text" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong><i class="fa fa-facebook"></i> Facebook</strong></label>
+                                                                        <InputText @bind-Value="@user.Facebook" class="form-control" placeholder="Paste link here..." type="text" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong><i class="fa fa-linkedin"></i> Linkedin</strong></label>
+                                                                        <InputText @bind-Value="@user.Linkedin" class="form-control" placeholder="Paste link here..." type="text" />
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col">
+                                                                    <div class="mb-3">
+                                                                        <label class="form-label"><strong><i class="fa fa-twitter"></i> Twitter</strong></label>
+                                                                    <InputText @bind-Value="@user.Twitter" class="form-control" placeholder="Paste link here..." type="text" />
+                                                                    </div>
+                                                               </div>           
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Skills</strong></label>
+                                                                    <InputTextArea @bind-Value="@user.Skills" class="form-control" type="text" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Bio</strong></label>
+                                                                    <InputTextArea @bind-Value="@user.Bio" class="form-control" type="text" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Description</strong></label>
+                                                                    <InputTextArea @bind-Value="@user.Description" class="form-control" type="text" />
+                                                                </div>
+                                                            </div>
+
+                                                            <a href="/Identity/Account/Login" @onclick="Post" class="btn btn-info w-100">Save Changes</a>
+                                                            <div class="mb-3"></div>
+                                                        </EditForm>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+       
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public string Id { get; set; }
+    public User user = new();
+    public List<Department> departments = new();
+    protected override async Task OnInitializedAsync()
+    {
+        user = await _db.User.FindAsync(Id);
+        departments = await _db.Department.ToListAsync();
+    }
+
+    async Task Post()
+    {
+        try
+        {
+            _db.User.Update(user);
+            await _db.SaveChangesAsync();
+           // router.NavigateTo("/Identity/Account/Login");
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+}
+
+  
+  
+
+
+
+
+

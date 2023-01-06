@@ -38,8 +38,9 @@ namespace Verdon
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("ApplicationDbContextConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("ApplicationDbContextConnection")));
+            services.AddDbContext<QuizDbContext>(options =>
+               options.UseSqlite(Configuration.GetConnectionString("sqlite")));
             services.AddIdentity<User, Role>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddDefaultUI()
                 .AddDefaultTokenProviders()
@@ -53,6 +54,8 @@ namespace Verdon
             services.AddSingleton<MailService>();
             services.AddTransient<UserService>();
             services.AddTransient<UploadController>();
+            services.AddHttpContextAccessor();
+            services.AddHttpClient();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

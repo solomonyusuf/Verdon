@@ -26,6 +26,7 @@ namespace Verdon.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly MailService _emailSender;
 
+
         public RegisterModel(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -81,7 +82,7 @@ namespace Verdon.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
+                    await _userManager.AddToRoleAsync(user, "User");
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -92,7 +93,7 @@ namespace Verdon.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         @$"
-                                  <h1>Ver<span style=""color:rgb(43,187,208);"">don.</span></h1><br/>
+                                  <h1 align=""center"">Ver<span style=""color:rgb(43,187,208);"">don.</span></h1><br/>
                                     <hr><br/>
                             Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 

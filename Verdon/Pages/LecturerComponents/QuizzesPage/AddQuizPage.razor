@@ -1,6 +1,6 @@
 ﻿@page "/add/quiz"
 @layout _LecturerLayout
-@inject ApplicationDbContext _db
+@inject QuizDbContext _db
 @inject NavigationManager router
 @inject UserService _usr
 
@@ -34,10 +34,12 @@
 
 @code {
     public PrivateQuiz quiz = new();
+    public User user = new();
     public string Id;
     protected override async Task OnInitializedAsync()
     {
         var e = await _usr.CurrentUser();
+        user = e;
         Id = e.Id;
     }
 
@@ -45,6 +47,7 @@
     {
         quiz.UserId = Id;
         quiz.Visible = false;
+        quiz.Department = user.Department;
         var e = await _db.PrivateQuiz.AddAsync(quiz);
         await _db.SaveChangesAsync();
         router.NavigateTo($"/modify/quiz/{e.Entity.PrivateQuizId}");

@@ -27,16 +27,20 @@
 
 @code {
     public Lecture lect = new();
+    public User user = new();
     public string Id;
+
     protected override async Task OnInitializedAsync()
     {
         var e = await _usr.CurrentUser();
+        user = e;
         Id = e.Id;
     }
 
     async Task Post()
     {
         lect.UserId = Id;
+        lect.Department = user.Department;
         var e = await _db.Lecture.AddAsync(lect);
         await _db.SaveChangesAsync();
         router.NavigateTo($"/modify/lecture/{e.Entity.LectureId}");

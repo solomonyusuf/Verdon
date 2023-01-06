@@ -86,7 +86,12 @@ namespace Verdon.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var role = await _userManager.GetRolesAsync(user);
+                    if (role[0] == "User")
+                        return LocalRedirect("/home");
+                    else 
+                        return LocalRedirect("/dashboard");
                 }
                 if (result.RequiresTwoFactor)
                 {

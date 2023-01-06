@@ -13,6 +13,7 @@ namespace Verdon.Core.Dynamic
         public Guid LectureId { get; set; }
         public string LectureName { get; set; }
         public string UserId { get; set; }
+        public string Department { get; set; }
         public string CourseCode { get; set; }
         public int LecturePass { get; set; }
         public string Password { get; set; }

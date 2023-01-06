@@ -17,6 +17,9 @@ namespace Verdon.Areas.Identity.Pages.Account
     {
         private readonly UserManager<User> _userManager;
 
+        [BindProperty]
+        private  User Person  { get; set; }
+
         public ConfirmEmailModel(UserManager<User> userManager)
         {
             _userManager = userManager;
@@ -37,11 +40,11 @@ namespace Verdon.Areas.Identity.Pages.Account
             {
                 return NotFound($"Unable to load user with ID '{userId}'.");
             }
-
+            Person = user;
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
             var result = await _userManager.ConfirmEmailAsync(user, code);
             StatusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
-            return Page();
+            return LocalRedirect($"/proceed/{user.Id}");
         }
     }
 }

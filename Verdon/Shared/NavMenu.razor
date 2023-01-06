@@ -1,11 +1,22 @@
 ﻿
 <header id="header" style="background-color:white;" class="header fixed-top" data-scrollto-offset="0">
     <div class="container-fluid d-flex align-items-center justify-content-between">
+        <AuthorizeView>
+            <Authorized>
 
-        <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
-            
-            <h1>Ver<span>don.</span></h1>
-        </a>
+                <a href="/home" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+                    <h1>Ver<span>don.</span></h1>
+                </a>
+
+            </Authorized>
+            <NotAuthorized>
+                <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+                    <h1>Ver<span>don.</span></h1>
+                </a>
+            </NotAuthorized>
+        </AuthorizeView>
+
+        
 
         <nav id="navbar" class="navbar">
             <ul>

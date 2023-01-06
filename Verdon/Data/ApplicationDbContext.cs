@@ -52,4 +52,20 @@ namespace Verdon.Data
         public virtual DbSet<Reaction> Reaction { get; set; }
 
     }
+
+    public class QuizDbContext : DbContext
+    {
+        public QuizDbContext(DbContextOptions<QuizDbContext> options)
+           : base(options)
+        {
+            
+        }
+
+        public virtual DbSet<PrivateAttempt> PrivateAttempt { get; set; }
+        public virtual DbSet<PrivateOption> PrivateOption { get; set; }
+        public virtual DbSet<PrivateQuiz> PrivateQuiz { get; set; }
+        public virtual DbSet<PrivateQuestion> PrivateQuestion { get; set; }
+        public virtual DbSet<PrivateQuizResult> PrivateQuizResult { get; set; }
+        public virtual DbSet<Track> Track { get; set; }
+    }
 }

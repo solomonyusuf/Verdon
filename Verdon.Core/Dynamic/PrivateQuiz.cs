@@ -14,6 +14,7 @@ namespace Verdon.Core.Dynamic
         public virtual Guid PrivateQuizId { get; set; }
         public virtual string UserId { get; set; }
         public virtual int QuizId { get; set; }
+        public string Department { get; set; }
         public virtual string Password { get; set; }
         public virtual string Title { get; set; }
         public virtual int Duration { get; set; }
