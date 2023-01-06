@@ -3,6 +3,8 @@
 @inject QuizDbContext _db
 @inject NavigationManager router
 @inject UserService _usr
+@attribute [Authorize(Roles = "Lecturer")]
+
 <div class="container-fluid" data-aos="zoom-out">
     <div class="card">
         <div class="card-body">

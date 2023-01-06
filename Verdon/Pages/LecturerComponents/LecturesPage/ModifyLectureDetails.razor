@@ -2,6 +2,7 @@
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
 @inject UploadController _upload
+@attribute [Authorize(Roles = "Lecturer")]
 
 <div class="row" data-aos="zoom-out" style="margin:4px;">
     <div class="col-md-8">

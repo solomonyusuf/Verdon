@@ -1,5 +1,6 @@
 ﻿@page "/lecture/detail/{Id}"
 @inject ApplicationDbContext _db
+@attribute [Authorize(Roles = "User,HOC")]
 
 <div class="row" data-aos="zoom-out" style="margin:4px;">
 <div class="col-md-8">

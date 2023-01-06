@@ -88,10 +88,10 @@ namespace Verdon.Areas.Identity.Pages.Account
                     _logger.LogInformation("User logged in.");
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var role = await _userManager.GetRolesAsync(user);
-                    if (role[0] == "User")
-                        return LocalRedirect("/home");
-                    else 
-                        return LocalRedirect("/dashboard");
+
+                    if (role[0] == "User" || role[0] == "HOC")
+                            return LocalRedirect("/");
+                    else return LocalRedirect("/dashboard");
                 }
                 if (result.RequiresTwoFactor)
                 {

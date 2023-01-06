@@ -1,6 +1,7 @@
 ﻿@page "/quiz/login"
 @inject QuizDbContext _db
 @inject NavigationManager router
+@attribute [Authorize(Roles = "User,HOC")]
 
 <section class="container col-md-8 card" style="background-image:url('assets/img/portfolio/books-1.jpg'); margin-top:30px;">
     <div data-aos="zoom-out" >

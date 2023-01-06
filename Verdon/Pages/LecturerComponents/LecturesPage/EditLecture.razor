@@ -2,6 +2,7 @@
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
 @inject NavigationManager router
+@attribute [Authorize(Roles = "Lecturer")]
 
 <div class="container-fluid col-lg-8" data-aos="zoom-out">
     <div class="card">

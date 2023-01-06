@@ -28,6 +28,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\GeneralComponents\ProfilePage.razor" />
+    <None Include="Pages\GeneralComponents\AuthPage.razor" />
+    <None Include="Pages\GeneralComponents\HomeComponent.razor" />
+    <None Include="Pages\GeneralComponents\HOCLibaryComponent.razor" />
+    <None Include="Pages\GeneralComponents\LibaryComponent.razor" />
+    <None Include="Pages\GeneralComponents\SocicalPage.razor" />
+    <None Include="Pages\LectureComponent\LectureDetail.razor" />
+    <None Include="Pages\LectureComponent\LectureLogin.razor" />
+    <None Include="Pages\LecturerComponents\Dashboard.razor" />
+    <None Include="Pages\LecturerComponents\LecturesPage\AddLecturePage.razor" />
+    <None Include="Pages\LecturerComponents\LecturesPage\AllLecture.razor" />
+    <None Include="Pages\LecturerComponents\LecturesPage\EditLecture.razor" />
+    <None Include="Pages\LecturerComponents\LecturesPage\ModifyLectureDetails.razor" />
+    <None Include="Pages\LecturerComponents\QuizzesPage\AddQuizPage.razor" />
+    <None Include="Pages\LecturerComponents\QuizzesPage\AllQuiz.razor" />
+    <None Include="Pages\LecturerComponents\QuizzesPage\EditQuiz.razor" />
+    <None Include="Pages\LecturerComponents\QuizzesPage\ModifyQuizDetails.razor" />
+    <None Include="Pages\QuizComponents\MainQuizPage.razor" />
+    <None Include="Pages\QuizComponents\QuizInstruction.razor" />
+    <None Include="Pages\QuizComponents\QuizLogin.razor" />
+    <None Include="Pages\QuizComponents\QuizResult.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Verdon.Core\Verdon.Core.csproj" />
   </ItemGroup>
 

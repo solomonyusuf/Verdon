@@ -2,7 +2,7 @@
 @layout _LecturerLayout
 @inject ApplicationDbContext _db
 @inject UserService _usr
-
+@attribute [Authorize(Roles = "Lecturer")]
 
 <div class="container-fluid" data-aos="zoom-out">
     <h4>LECTURER DASHBOARD</h4>

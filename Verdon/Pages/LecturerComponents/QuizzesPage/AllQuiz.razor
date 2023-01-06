@@ -2,6 +2,7 @@
 @layout _LecturerLayout
 @inject QuizDbContext _db
 @inject UserService _usr
+@attribute [Authorize(Roles = "Lecturer")]
 
 <div class="container-fluid" data-aos="zoom-out">
     <h3 class="text-dark mb-4">Database Quizzes &nbsp;<a class="btn btn-outline-primary" href="/add/quiz">Add Quiz</a></h3>

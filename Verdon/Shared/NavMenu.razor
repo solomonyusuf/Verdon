@@ -1,31 +1,36 @@
 ﻿
 <header id="header" style="background-color:white;" class="header fixed-top" data-scrollto-offset="0">
     <div class="container-fluid d-flex align-items-center justify-content-between">
-        <AuthorizeView>
-            <Authorized>
-
-                <a href="/home" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
-                    <h1>Ver<span>don.</span></h1>
-                </a>
-
-            </Authorized>
-            <NotAuthorized>
-                <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
-                    <h1>Ver<span>don.</span></h1>
-                </a>
-            </NotAuthorized>
-        </AuthorizeView>
+        <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+            <h1>Ver<span>don.</span></h1>
+        </a>
 
         
 
         <nav id="navbar" class="navbar">
             <ul>
+                 
+                <AuthorizeView Roles="User">
+                <Authorized>
+                            <li><NavLink class="nav-link scrollto" href="/quiz/login">Quiz</NavLink></li>
+                            <li><NavLink class="nav-link scrollto" href="/lecture">Lecture</NavLink></li>
+                            <li><NavLink class="nav-link scrollto" href="/libary">Libary</NavLink></li>
+                </Authorized>
+               </AuthorizeView>
+                <AuthorizeView Roles="HOC">
+                    <Authorized>
+                        <li><NavLink class="nav-link scrollto" href="/quiz/login">Quiz</NavLink></li>
+                        <li><NavLink class="nav-link scrollto" href="/lecture">Lecture</NavLink></li>
+                        <li><NavLink class="nav-link scrollto" href="/libary/hoc">Libary</NavLink></li>
 
-                
-                <li><NavLink class="nav-link scrollto" href="/quiz/login">Quiz</NavLink></li>
-                <li><NavLink class="nav-link scrollto" href="/lecture">Lecture</NavLink></li>
-                <li><NavLink class="nav-link scrollto" href="/dashboard">Lecturer</NavLink></li>
-                <li><NavLink class="nav-link scrollto" href="/libary">Libary</NavLink></li>
+                    </Authorized>
+                </AuthorizeView>
+                <AuthorizeView Roles="Lecturer">
+                    <Authorized>
+                        <li><NavLink class="nav-link scrollto" href="/dashboard">Dashboard</NavLink></li>
+                       
+                    </Authorized>
+                </AuthorizeView>
                 <li><NavLink class="nav-link scrollto" href="/socical">Socical</NavLink></li>
                
             </ul>

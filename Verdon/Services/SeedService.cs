@@ -49,6 +49,54 @@ namespace Verdon.Services
                     userManager.AddToRoleAsync(user, "Admin").Wait();
                 }
             }
+
+            if (userManager.FindByNameAsync
+                   ("lecturer@gmail.com").Result == null)
+            {
+                var user = new User();
+                user.UserName = "lecturer@gmail.com";
+                user.Email = "lecturer@gmail.com";
+                user.EmailConfirmed = true;
+                IdentityResult result = userManager.CreateAsync
+                (user, "Solomon12!").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "Lecturer").Wait();
+                }
+            }
+
+            if (userManager.FindByNameAsync
+                   ("user@gmail.com").Result == null)
+            {
+                var user = new User();
+                user.UserName = "user@gmail.com";
+                user.Email = "user@gmail.com";
+                user.EmailConfirmed = true;
+                IdentityResult result = userManager.CreateAsync
+                (user, "Solomon12!").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "User").Wait();
+                }
+            }
+
+            if (userManager.FindByNameAsync
+                   ("hoc@gmail.com").Result == null)
+            {
+                var user = new User();
+                user.UserName = "hoc@gmail.com";
+                user.Email = "hoc@gmail.com";
+                user.EmailConfirmed = true;
+                IdentityResult result = userManager.CreateAsync
+                (user, "Solomon12!").Result;
+
+                if (result.Succeeded)
+                {
+                    userManager.AddToRoleAsync(user, "HOC").Wait();
+                }
+            }
         }
 
 
@@ -64,6 +112,15 @@ namespace Verdon.Services
                 CreateAsync(role).Result;
             }
 
+            if (!roleManager.RoleExistsAsync
+               ("HOC").Result)
+            {
+                Role role = new Role();
+                role.Name = "HOC";
+                IdentityResult roleResult = roleManager.
+                CreateAsync(role).Result;
+            }
+
 
             if (!roleManager.RoleExistsAsync
                 ("Admin").Result)
@@ -75,7 +132,7 @@ namespace Verdon.Services
             }
 
             if (!roleManager.RoleExistsAsync
-               ("Teacher").Result)
+               ("Lecturer").Result)
             {
                 Role role = new Role();
                 role.Name = "Lecturer";

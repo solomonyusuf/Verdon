@@ -1,7 +1,11 @@
 ﻿@page "/"
 @using Verdon.Pages.GeneralComponents
+@using Verdon.Pages.LecturerComponents
 
-<AuthorizeView>
+
+
+<div>
+    <AuthorizeView Roles="User,HOC">
     <Authorized>
 
         <HomeComponent/>
@@ -10,8 +14,8 @@
     <NotAuthorized>
         <div class="container d-flex flex-column justify-content-center align-items-center text-center position-relative" data-aos="zoom-out">
             <img src="assets/img/hero-carousel/hero-carousel-3.svg" class="img-fluid animated">
-            <h2>Welcome to <strong>Ver<span style="color:rgb(43,187,208);">don.</span></strong> </h2>
-            <p>Connecting professional skills and academic excellence.</p>
+            <h1>Welcome to <strong>Ver<span style="color:rgb(43,187,208);">don.</span></strong> </h1>
+            <h5>Connecting professional skills and academic excellence.</h5>
             <div class="d-flex">
                 <a class="btn btn-info btn-lg" href="Identity/Account/Login">Get Started</a>
 
@@ -945,5 +949,6 @@
     </NotAuthorized>
 </AuthorizeView>
 
+</div>
 
  
