@@ -99,7 +99,8 @@
     {
         var e = await _usr.CurrentUser();
         department = e.Department;
-        await GetAll();
+        if (department != null)
+                await GetAll();
     }
 
     async Task GetAll()

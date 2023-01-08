@@ -1,14 +1,13 @@
-﻿@page "/allquiz"
-@layout _LecturerLayout
+﻿@page "/quiz/result/{Id}"
 @inject QuizDbContext _db
-@inject UserService _usr
-@attribute [Authorize(Roles = "Lecturer")]
+
+
 
 <div class="container-fluid" data-aos="zoom-out">
-    <h3 class="text-dark mb-4">Database Quizzes &nbsp;<a class="btn btn-outline-primary" href="/add/quiz">Add Quiz</a></h3>
+    <h3 class="text-dark mb-4"> @quiz.Title Quiz Result </h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Quizzes Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
+            <p class="text-primary m-0 fw-bold">Students Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
         </div>
         <div class="card-body">
             <div class="row">
@@ -42,15 +41,13 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Quiz Name</th>
-                            <th>ID</th>
-                            <th>Password</th>
-                            <th>Activated</th>
-                            <th>Result</th>
+                            <th>Matric No</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Department</th>
+                            <th>Score</th>
                             <th>Date</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
+
                         </tr>
                     </thead>
                     <tbody style="height:700px;overflow-y:scroll;">
@@ -63,33 +60,26 @@
                         @foreach (var item in model)
                         {
                             <tr>
-                                <td>@(Key++)</td>
-                                <td>@item.Title</td>
-                                <td>@item.QuizId</td>
-                                <td>@item.Password</td>
+                               <td>@(Key++)</td>
+                                <td>@item.MatricNo</td>
+                                <td>@item.FirstName</td>
+                                <td>@item.LastName</td>
+                                <td>@item.Department</td>
+                                <td>@item.Score</td>
                                 <td>@item.DateTime</td>
-                                <td>@item.Visible</td>
-                                <td><a class="btn btn-primary" href="/quiz/result/@item.PrivateQuizId">VIEW</a></td>
-                                 <td>@item.DateTime</td> 
-                                <td><a class="btn btn-info" href="/modify/quiz/@item.PrivateQuizId"><i class="fa fa-edit"></i></a></td>
-                                <td><a class="btn btn-outline-primary" href="/edit/quiz/@item.PrivateQuizId"><i class="fa fa-edit"></i></a></td>
-                                <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
                             </tr>
                         }
 
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th>No</th>
-                            <th>Quiz Name</th>
-                            <th>ID</th>
-                            <th>Password</th>
-                            <th>Activated</th>
-                            <th>Result</th>
+                             <th>No</th>
+                            <th>Matric No</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Department</th>
+                            <th>Score</th>
                             <th>Date</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -102,10 +92,12 @@
 
 
 @code {
-    public List<PrivateQuiz> model = new();
+    [Parameter]
+    public string Id { get; set; }
+    public PrivateQuiz quiz = new();
+    public List<PrivateQuizResult> model = new();
     public Props prop = new();
     public int Key = 1;
-    public string Id;
     public class Props
     {
         public int Count { get; set; }
@@ -119,8 +111,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var e = await _usr.CurrentUser();
-        Id = e.Id;
+        quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(Id));
         await GetAll();
     }
 
@@ -131,13 +122,17 @@
     {
         try
         {
-            var req = await _db.PrivateQuiz.Where(x => x.UserId == Id).ToListAsync();
+            var req = await _db.PrivateQuizResult.Where(x => x.PrivateQuizId == Guid.Parse(Id)).ToListAsync();
             Key = 1;
             if (search.input != null)
             {
 
                 model = req.Where(x =>
-                    x.Title.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.FirstName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.MiddleName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.LastName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.MatricNo.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.Department.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
                     x.DateTime.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
                 ).ToList();
             }
@@ -154,16 +149,14 @@
 
     }
 
-    
+
     public async Task Refresh()
     {
         try
         {
             Key = 1;
-            var req = await _db.PrivateQuiz.ToListAsync();
-            model = req;
-
-
+            search.input = null;
+            await GetAll();
         }
         catch (Exception ex)
         {
@@ -196,20 +189,5 @@
 
     }
 
-    
-    public async Task Remove(PrivateQuiz s)
-    {
-        try
-        {
-            _db.PrivateQuiz.Remove(s);
-            await _db.SaveChangesAsync();
-            await GetAll();
 
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-
-    }
 }
