@@ -1,17 +1,100 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Verdon.Core.Base;
+using Verdon.Core.Dynamic;
+using Verdon.Data;
 
 namespace Verdon.Services
 {
     public class SeedService
     {
-        public static void SeedData(UserManager<User> userManager, RoleManager<Role> roleManager)
+        public static void SeedData(UserManager<User> userManager, RoleManager<Role> roleManager, ApplicationDbContext _db)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
+            SeedDepartment(_db);
         }
 
+        public static void SeedDepartment(ApplicationDbContext _db)
+        {
+            var list = _db.Department.ToListAsync();
+            var departments = new List<string> {
 
+                "Arabic",
+                "Christian Religious Studies",
+                "Islamic Religious Studies",
+                "History & International Studies",
+                "Music",
+                "Theatre Arts",
+                "Portuguese / English",
+                "Arabic Education",
+                "CRS Education",
+                "Islamic Studies Education",
+                "English Education",
+                "French Education",
+                "History Education",
+                "Yoruba Education",
+                "Biology Education",
+                " Chemistry Education",
+                "Mathematics Education",
+                "Physics Education",
+                "Physical & Health Education",
+                "Health Education",
+                "Computer Science Education",
+                "Educational Technology",
+                "Business Education",
+                "Accounting Education",
+                "Educational Management",
+                "Geography Education",
+                "Economics Education",
+                "Political Science Education",
+                "Law",
+                "Agriculture",
+                "Accounting",
+                "Public Administration",
+                "Marketing",
+                "Banking & Finance",
+                "Management Technology",
+                "Industrial Relations and Personnel Management",
+                "Insurance",
+                "Mass Communication",
+                "Biochemistry",
+                "Botany",
+                "Chemistry",
+                "Fisheries & Aquatic Biology",
+                "Mathematics",
+                "Microbiology",
+                "Physics",
+                "Zoology",
+                "Computer Science",
+                "Medicine & Surgery",
+                "Physiology",
+                "Dentistry",
+                "Nursing",
+                "Geography & Planning",
+                "Psychology",
+                "Economics",
+                "Political Science",
+                "Sociology",
+                "Transport",
+                "Mechanical Engineering",
+                "Electronics & Computer Engineering",
+                "Chemical and Polymer Engineering"
+         };
+            departments.ForEach(async x =>
+            {
+                var data = list.Result.Any(y => y.Name == x);
+                if(data == false)
+                {
+                    var input = new Department { Name = x };
+                    await _db.Department.AddAsync(input);
+                }          
+            });
+             _db.SaveChangesAsync();
+        }
 
         public static void SeedUsers
     (UserManager<User> userManager)

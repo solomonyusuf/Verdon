@@ -2,7 +2,7 @@
 @inject QuizDbContext _context
 @inject NavigationManager router
 @inject UserService _user
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <div class="col-md-8 mb-3" style="margin-top:50px;" align="center">
     <div class="card">

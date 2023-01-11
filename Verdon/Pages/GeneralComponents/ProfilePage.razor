@@ -33,7 +33,7 @@
                                     <div class="tab-pane active" role="tabpanel" id="tab-1">
                                         <div class="row">
                                             <div class="col">
-                                                <div class="card shadow mb-3">
+                                                <div class="card mb-3">
                                                     <div class="card-header py-3">
                                                         <p class="text-primary m-0 fw-bold"> User Info </p>
                                                     </div>
@@ -92,7 +92,7 @@
                                                                         <InputSelect class="form-control" @bind-Value="@user.Department">
                                                                             @foreach (var item in departments)
                                                                             {
-                                                                                <option value="@item">@item</option>
+                                                                            <option value="@item.Name">@item.Name</option>
                                                                             }
                                                                         </InputSelect>
                                                                     </div>
@@ -121,7 +121,7 @@
                                                                 </div>
                                                                 <div class="col">
                                                                     <div class="mb-3">
-                                                                        <label class="form-label"><strong>Course</strong></label>
+                                                                        <label class="form-label"><strong>Course Code</strong></label>
                                                                         <InputText @bind-Value="@user.Course" class="form-control" type="text" />
                                                                     </div>
                                                                 </div>

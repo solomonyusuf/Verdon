@@ -1,14 +1,13 @@
-﻿@page "/alllecture"
-@layout _LecturerLayout
+﻿@page "/users"
+@using Microsoft.AspNetCore.Mvc
 @inject ApplicationDbContext _db
-@inject UserService _usr
-@attribute [Authorize(Roles = "Lecturer")]
+@attribute [Authorize(Roles = "Admin")]
 
-<div class="container-fluid" data-aos="zoom-out">
-    <h3 class="text-dark mb-4">Database Lectures &nbsp;<a class="btn btn-outline-primary" href="/add/lecture">Add Lecture</a></h3>
+<div class="container-fluid text-dark" data-aos="zoom-out">
+    <h3 class="text-dark mb-4">Database Users </h3>
     <div class="card shadow">
         <div class="card-header py-3">
-            <p class="text-primary m-0 fw-bold">Lectures Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
+            <p class="text-primary m-0 fw-bold">Users Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
         </div>
         <div class="card-body">
             <div class="row">
@@ -42,16 +41,15 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Lecture Name</th>
-                            <th>ID</th>
-                            <th>Password</th>
-                            <th>Date</th>
-                            <th></th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Sex</th>
+                            <th>Department</th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody style="height:700px;overflow-y:scroll;">
+                    <tbody style="height:900px;overflow-y:scroll;">
                         @if (model.Count() == 0)
                         {
                             <tr>
@@ -62,12 +60,14 @@
                         {
                             <tr>
                                 <td>@(Key++)</td>
-                                <td>@item.LectureName</td>
-                                <td>@item.LecturePass</td>
-                                <td>@item.Password</td>
-                                <td>@item.DateTime</td>
-                                <td><a class="btn btn-info" href="/modify/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
-                                <td><a class="btn btn-outline-primary" href="/edit/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
+                                <td>
+                                    <a href="@item.Image"><img class="rounded-circle me-2" width="30" height="30" src="@item.Image" /></a>
+                                    &nbsp;<strong>@item.FirstName &nbsp; @item.LastName &nbsp; @item.MiddleName</strong>
+                                </td>
+                                <td>@item.Email</td>
+                                <td>@item.Sex</td>
+                                <td>@item.Department</td>
+                                <td><a class="btn btn-info" href="/user/@item.Id"><i class="fa fa-edit"></i></a></td>
                                 <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
                             </tr>
                         }
@@ -75,14 +75,13 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                     <th>No</th>
-                    <th>Lecture Name</th>
-                    <th>ID</th>
-                    <th>Password</th>
-                    <th>Date</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                            <th>No</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Sex</th>
+                            <th>Department</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -95,10 +94,9 @@
 
 
 @code {
-    public List<Lecture> model = new();
+    public List<User> model = new();
     public Props prop = new();
     public int Key = 1;
-    public string Id;
     public class Props
     {
         public int Count { get; set; }
@@ -112,27 +110,27 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var e = await _usr.CurrentUser();
-        Id = e.Id;
         await GetAll();
     }
 
     public List<int> Ops = new List<int> { 10, 25, 50, 100 };
 
-
+    [HttpGet]
     public async Task GetAll()
     {
         try
         {
-            var req = await _db.Lecture.Where(x => x.UserId == Id).ToListAsync();
+            var req = await _db.User.ToListAsync();
             Key = 1;
             if (search.input != null)
             {
 
                 model = req.Where(x =>
-                    x.LectureId.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
-                    x.LectureName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
-                    x.CourseCode.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
+                    x.Email.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.FirstName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.LastName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.MiddleName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                    x.Department.ToLowerInvariant().Contains(search.input.ToLowerInvariant())
                 ).ToList();
             }
             else
@@ -148,13 +146,13 @@
 
     }
 
-    
+    [HttpGet]
     public async Task Refresh()
     {
         try
         {
             Key = 1;
-            var req = await _db.Lecture.Where(x => x.UserId == Id).ToListAsync();
+            var req = await _db.User.ToListAsync();
             model = req;
 
 
@@ -190,12 +188,12 @@
 
     }
 
-    
-    public async Task Remove(Lecture s)
+    [HttpDelete]
+    public async Task Remove(User s)
     {
         try
         {
-            _db.Lecture.Remove(s);
+            _db.User.Remove(s);
             await _db.SaveChangesAsync();
             await GetAll();
 
@@ -206,4 +204,7 @@
         }
 
     }
+
+
+
 }

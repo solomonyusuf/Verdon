@@ -1,11 +1,10 @@
-﻿@page "/alllecture"
-@layout _LecturerLayout
+﻿@page "/visitor/lecture"
 @inject ApplicationDbContext _db
 @inject UserService _usr
-@attribute [Authorize(Roles = "Lecturer")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <div class="container-fluid" data-aos="zoom-out">
-    <h3 class="text-dark mb-4">Database Lectures &nbsp;<a class="btn btn-outline-primary" href="/add/lecture">Add Lecture</a></h3>
+    <h3 class="text-dark mb-4">Database Lectures </h3>
     <div class="card shadow">
         <div class="card-header py-3">
             <p class="text-primary m-0 fw-bold">Lectures Info &nbsp;&nbsp; <i class="text-dark">Showing @model.Count() informations</i></p>
@@ -43,11 +42,8 @@
                         <tr>
                             <th>No</th>
                             <th>Lecture Name</th>
-                            <th>ID</th>
-                            <th>Password</th>
-                            <th>Date</th>
-                            <th></th>
-                            <th></th>
+                            <th>Department</th>
+                            <th>Course code</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -63,12 +59,9 @@
                             <tr>
                                 <td>@(Key++)</td>
                                 <td>@item.LectureName</td>
-                                <td>@item.LecturePass</td>
-                                <td>@item.Password</td>
-                                <td>@item.DateTime</td>
-                                <td><a class="btn btn-info" href="/modify/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
-                                <td><a class="btn btn-outline-primary" href="/edit/lecture/@item.LectureId"><i class="fa fa-edit"></i></a></td>
-                                <td><button @onclick="@(()=> Remove(@item))" class="btn btn-danger"><i class="fa fa-remove"></i></button></td>
+                                <td>@item.Department</td>
+                                <td>@item.CourseCode</td>
+                                <td><a class="btn btn-info" href="/lecture/detail/@item.LectureId"><i class="fa fa-edit"></i></a></td>
                             </tr>
                         }
 
@@ -77,11 +70,8 @@
                         <tr>
                      <th>No</th>
                     <th>Lecture Name</th>
-                    <th>ID</th>
-                    <th>Password</th>
-                    <th>Date</th>
-                    <th></th>
-                    <th></th>
+                    <th>Department</th>
+                    <th>Course code</th>
                     <th></th>
                         </tr>
                     </tfoot>
@@ -124,7 +114,7 @@
     {
         try
         {
-            var req = await _db.Lecture.Where(x => x.UserId == Id).ToListAsync();
+            var req = await _db.Lecture.ToListAsync();
             Key = 1;
             if (search.input != null)
             {
@@ -132,6 +122,7 @@
                 model = req.Where(x =>
                     x.LectureId.ToString().ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
                     x.LectureName.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
+                     x.Department.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) ||
                     x.CourseCode.ToLowerInvariant().Contains(search.input.ToLowerInvariant()) 
                 ).ToList();
             }
@@ -154,7 +145,7 @@
         try
         {
             Key = 1;
-            var req = await _db.Lecture.Where(x => x.UserId == Id).ToListAsync();
+            var req = await _db.Lecture.ToListAsync();
             model = req;
 
 
@@ -191,19 +182,5 @@
     }
 
     
-    public async Task Remove(Lecture s)
-    {
-        try
-        {
-            _db.Lecture.Remove(s);
-            await _db.SaveChangesAsync();
-            await GetAll();
 
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex);
-        }
-
-    }
 }

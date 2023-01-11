@@ -14,6 +14,7 @@ namespace Verdon.Core.Dynamic
         public string Image { get; set; }
         public string Name { get; set; }
         public string Department { get; set; }
+        public int Level { get; set; }
         public string Author { get; set; }
         public string File { get; set; }
         public DateTime DateTime { get; set; }

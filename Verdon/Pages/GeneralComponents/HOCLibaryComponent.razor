@@ -1,7 +1,7 @@
 ﻿@page "/libary/hoc"
 @inject ApplicationDbContext _db
 @inject UploadController _upload
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <div class="row" data-aos="zoom-out" style="margin-top:30px;">
     <div class="col-md-4">
@@ -24,9 +24,20 @@
                             <option selected>NULL</option>
                             @foreach (var item in departments)
                             {
+                                <option value="@item.Name">@item.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="mb-3 col-md-6" align="center">
+                        <label>Level</label>
+                        <InputSelect class="form-control" @bind-Value="@data">
+                            <option value="NULL" @onclick="Filter" selected>NULL</option>
+                            @foreach (var item in new List<string> { "100", "200", "300", "400", "500", "600" })
+                            {
                                 <option value="@item">@item</option>
                             }
                         </InputSelect>
+
                     </div>
                 </div>
                 <div class="form-group" align="center">
@@ -48,15 +59,29 @@
                         <i class="fas fa-recycle"></i>
                     </button>
                 </div><br />
-                <div class="mb-3 col-md-6" align="center">
+              <div class="row">
+                    <div class="mb-3 col-md-6" align="center">
+                        <label>Department</label>
                     <InputSelect class="form-control" @bind-Value="@filter">
-                        <option value="NULL" @onclick="Filter" selected>All</option>
+                            <option value="NULL" @onclick="Filter" selected>All</option>
                         @foreach (var item in departments)
+                        {
+                                <option value="@item.Name">@item.Name</option>
+                        }
+                    </InputSelect>
+                   
+                </div>
+                <div class="mb-3 col-md-6" align="center">
+                        <label>Level</label>
+                    <InputSelect class="form-control" @bind-Value="@level">
+                            <option value="NULL" selected>NULL</option>
+                        @foreach (var item in new List<string>{"100","200","300","400","500","600"})
                         {
                             <option value="@item">@item</option>
                         }
                     </InputSelect>
-                   
+
+                </div>
                 </div>
                 <strong align="center" class="col-md-6">@books.Count() books</strong>
             </EditForm>
@@ -72,7 +97,16 @@
                     <div class="card" style="margin:2px;">
                         <div class="card-body">
                             <h5><a target="_blank" href="@item.File">@item.Name</a></h5>
-                            <small>@item.Image KB | @(int.Parse(item.Image)/1024) MB</small>
+                            @if (int.Parse(item.Image) >= 1024)
+                            {
+                                <small>@(int.Parse(item.Image) / 1024) MB</small>
+                            }
+                            @if (int.Parse(item.Image) < 1024)
+                            {
+                                <small>@item.Image KB </small>
+                            }
+
+                            <button style="margin:8px;" class="btn btn-danger" @onclick="@(()=> Remove(item))">Delete</button>
                         </div>
                     </div>
                 }
@@ -93,7 +127,9 @@
     public int counter = 0;
     public int total;
     public string value;
+    public string level;
     public string filter;
+    public string data;
 
 
     protected override async Task OnInitializedAsync()
@@ -106,30 +142,53 @@
     {
         books  = await _db.Book.ToListAsync();
         value = null;
+        level = null;
         filter = null;
     }
 
     async Task<List<Book>> GetAll()
     {
         books = await _db.Book.ToListAsync();
+        book = new Book();
 
+        if (filter != null && value != null && level != null)
+        {
+            books = await _db.Book.Where(x => x.Name.ToLower().Contains(filter.ToLower()) && x.Department.ToLower().Contains(value.ToLowerInvariant()) && 
+            x.Level.ToString().Contains(level.ToLowerInvariant())).ToListAsync();
+        }
         if(value != null)
         {
             books = await _db.Book.Where(x => x.Name.ToLower().Contains(value.ToLower())).ToListAsync();
         }
         if (filter != null)
         {
-            books = await _db.Book.Where(x => x.Name.ToLower().Contains(filter.ToLower()) || x.Department.ToLower().Contains(value.ToLowerInvariant())).ToListAsync();
+            books = await _db.Book.Where(x => x.Department.ToLower().Contains(filter.ToLower())).ToListAsync();
+        }
+        if (level != null)
+        {
+            books = await _db.Book.Where(x => x.Level.ToString().Contains(level)).ToListAsync();
         }
 
-        
 
         return books;
     }
 
-    void Filter(string val)
+
+    public async Task Remove(Book s)
     {
-        books = books.Where(x => x.Department.Equals(val)).ToList();
+        try
+        {
+            File.Delete(s.File);
+            _db.Book.Remove(s);
+            await _db.SaveChangesAsync();
+            await GetAll();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
     }
 
     public async Task Upload(InputFileChangeEventArgs args)
@@ -153,8 +212,10 @@
     {
         try
         {
+            book.Level = int.Parse(data);
             await _db.Book.AddAsync(book);
             await _db.SaveChangesAsync();
+            data = null;
             value = null;
             filter = null;
             books = await GetAll();

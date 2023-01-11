@@ -2,7 +2,7 @@
 @inject QuizDbContext _db
 @inject NavigationManager router
 @inject UserService _usr
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <section data-aos="zoom-out">
     <div class="card shadow" style="text-align: left">

@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Pages\GeneralComponents\VisitorLecture.razor" />
     <None Include="Pages\GeneralComponents\ProfilePage.razor" />
     <None Include="Pages\GeneralComponents\AuthPage.razor" />
     <None Include="Pages\GeneralComponents\HomeComponent.razor" />

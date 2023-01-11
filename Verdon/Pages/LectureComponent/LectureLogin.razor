@@ -1,7 +1,8 @@
 ﻿@page "/lecture"
 @inject ApplicationDbContext _db
 @inject NavigationManager router
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
+@inject UserService _usr
 
 <section class="container col-md-8 card" style="background-image:url('assets/img/portfolio/app-3.jpg'); margin-top:30px;">
     <div data-aos="zoom-out">
@@ -25,17 +26,25 @@
 </section>
 @code {
     public Lecture lect = new();
+    public Attendance att = new();
+    public User user = new();
     public string Id;
     public string Pwd;
     public string val;
-    async Task Post()
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await _usr.CurrentUser();
+    }
+
+    async void Post()
     {
         try
         {
-            var req = await _db.Lecture.Where(x => x.LecturePass == int.Parse(Id)).SingleAsync();
-            if (req.Password.Equals(Pwd))
+            var lect = await _db.Lecture.Where(x => x.LecturePass == int.Parse(Id)).SingleAsync();
+            if (lect.Password.Equals(Pwd))
             {
-                router.NavigateTo($"/lecture/detail/{req.LectureId}");
+                router.NavigateTo($"/lecture/detail/{lect.LectureId}");
             }
             else
             {
@@ -48,5 +57,7 @@
             Console.WriteLine(e);
         }
     }
+
+   
 
 }

@@ -59,7 +59,7 @@ namespace Verdon
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<Role> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<User> userManager, RoleManager<Role> roleManager, ApplicationDbContext db)
         {
             if (env.IsDevelopment())
             {
@@ -74,7 +74,7 @@ namespace Verdon
 
 
             //seed users
-            SeedService.SeedData(userManager, roleManager);
+            SeedService.SeedData(userManager, roleManager, db);
 
             // configure static file permission
             FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.Write, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));

@@ -1,0 +1,269 @@
+﻿@page "/user/{UserId}"
+@using Microsoft.AspNetCore.Identity
+@attribute [Authorize(Roles = "Admin")]
+@inject ApplicationDbContext _db
+@inject UserManager<User> _user
+@inject UploadController _upload
+
+
+<div class="container-fluid text-dark">
+    <h3 class="text-dark mb-4">User Detail </h3>
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center shadow">
+                    <img class="rounded-circle mb-3 mt-4" src="@user.Image" width="160" height="160"><br />
+                    <EditForm Model="@upload">
+                        <div class="mb-3"><InputFile OnChange="@ImgPost" accept="*/image" class="form-control" type="file" /></div>
+                    </EditForm>
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="text-primary fw-bold m-0">Details</h6>
+                </div>
+                <div class="card-body">
+                    <h4 class="small fw-bold" style="color: var(--bs-indigo);font-size: 20px;font-weight: bold;font-style: italic;"><i>@user.FirstName&nbsp;@user.MiddleName&nbsp;@user.LastName</i></h4>
+                    <h4 class="small fw-bold" style="font-weight: bold;font-style: italic;font-size: 18px;">@user.Department</h4>
+                    <h4 class="small fw-bold" style="font-size: 18px;font-weight: bold;font-style: italic;">@user.Sex</h4>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-8">
+            <div class="row mb-3 d-none">
+                <div class="col">
+                    <div class="card textwhite bg-primary text-white shadow">
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="m-0">Peformance</p>
+                                    <p class="m-0"><strong>65.2%</strong></p>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                            </div>
+                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card textwhite bg-success text-white shadow">
+                        <div class="card-body">
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <p class="m-0">Peformance</p>
+                                    <p class="m-0"><strong>65.2%</strong></p>
+                                </div>
+                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                            </div>
+                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold"> User Info </p>
+                        </div>
+                        <div class="card-body">
+                            <EditForm Model="@user">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>First Name</strong></label>
+                                            <InputText @bind-Value="@user.FirstName" class="form-control" type="text" id="username" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Middle Name</strong></label>
+                                            <InputText @bind-Value="@user.MiddleName" class="form-control" type="text" id="email" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Last Name</strong></label>
+                                            <InputText @bind-Value="@user.LastName" class="form-control" type="text" id="first_name" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>User ID</strong></label>
+                                            <InputText @bind-Value="@user.Id" class="form-control" type="text" disabled="disabled" id="last_name" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
+                                            <InputSelect class="form-control" @bind-Value="@user.Sex">
+                                                @foreach (var sex in new List<string> { "NULL", "MALE", "FEMALE" })
+                                                {
+                                                    <option value="@sex">@sex</option>
+                                                }
+                                            </InputSelect>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
+                                            <InputText class="form-control" @bind-Value="@user.Department" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Phone No</strong></label>
+                                            <InputText @bind-Value="@user.PhoneNumber" class="form-control" type="text" id="first_name" />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Email</strong></label>
+                                            <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button @onclick="Update" class="btn btn-primary w-100" type="submit">Save Changes</button>
+
+                                <div class="mb-3"></div>
+                            </EditForm>
+                        </div>
+                    </div>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Configure Role </p>
+                        </div>
+                        <div class="card-body">
+
+                            <EditForm Model="@role" OnSubmit="RoleM">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="mb-3">
+                                            <label class="form-label"><strong>Role</strong>:&nbsp;@val &nbsp;</label>
+                                            <InputSelect class="form-control" @bind-Value="@input">
+                                                <option value="NULL">NULL</option>
+                                                @foreach (var x in roles)
+                                                {
+                                                    <option value="@x.Name">@x.Name</option>
+                                                }
+                                            </InputSelect>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary w-100" type="submit">Configure Role</button>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string UserId { get; set; }
+    public User user = new();
+    public Role role = new();
+    public string val;
+    public string input;
+    public List<Role> roles = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Get();
+    }
+
+    public enum Sex
+    {
+        NULL,
+        MALE,
+        FEMALE
+    }
+
+
+
+    public async Task ImgPost(InputFileChangeEventArgs args)
+    {
+        try
+        {
+
+            var file = args.File;
+            await _upload.Upload(file);
+            user.Image = $"wwwroot\\StaticFiles\\{file.Name}";
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+
+    public class Upload
+    {
+        public string dbPath { get; set; }
+    }
+    public Upload upload = new();
+
+    public async Task Get()
+    {
+        try
+        {
+            roles = await _db.Role.ToListAsync();
+            user = await _db.User.FindAsync(UserId);
+            var res = await _user.GetRolesAsync(user);
+            val = res[0];
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+    public async Task Update()
+    {
+        try
+        {
+
+            _db.User.Update(user);
+            await _db.SaveChangesAsync();
+            await Get();
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+
+    public async Task RoleM()
+    {
+        try
+        {
+           if(val != null)
+           {
+                if (val != input)
+                {
+                    await _user.RemoveFromRoleAsync(user, val);
+                    await _user.AddToRoleAsync(user, input);
+                }
+                await Get();
+           }
+
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+    }
+}
+

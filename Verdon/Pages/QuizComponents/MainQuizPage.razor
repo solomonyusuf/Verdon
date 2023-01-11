@@ -5,7 +5,7 @@
 @inject QuizDbContext _context
 @inject NavigationManager router
 @inject UserService _user
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <section style="margin-top:30px;">
     <div class="row gutters-sm">

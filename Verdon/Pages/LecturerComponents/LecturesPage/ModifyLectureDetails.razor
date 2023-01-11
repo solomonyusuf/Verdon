@@ -31,7 +31,14 @@
                                 <div class="card" style="margin:2px;">
                                     <div class="card-body">
                                         <h5><a target="_blank" href="@item.Video"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.LessonName</a></h5>
-                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                         @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                         <div class="mb-3" align="center">
                                             <button @onclick="@(()=>  RemoveLesson(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Lesson</button>
                                         </div>
@@ -49,7 +56,14 @@
                                 <div class="card" style="margin:2px;">
                                     <div class="card-body">
                                         <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
-                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                         <div class="mb-3" align="center">
                                             <button @onclick="@(()=>  RemoveResource(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Resource</button>
                                         </div>
@@ -67,7 +81,14 @@
                                 <div class="card" style="margin:2px;">
                                     <div class="card-body">
                                         <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
-                                        <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                         @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                         <div class="mb-3" align="center">
                                             <button @onclick="@(()=> RemoveAssignment(item))" class="btn btn-danger btn-lg w-50" type="submit">Delete Asssignment</button>
                                         </div>

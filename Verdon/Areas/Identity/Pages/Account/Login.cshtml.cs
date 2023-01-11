@@ -89,7 +89,7 @@ namespace Verdon.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var role = await _userManager.GetRolesAsync(user);
 
-                    if (role[0] == "User" || role[0] == "HOC")
+                    if (role[0] == "User" || role[0] == "HOC" || role[0] == "Admin")
                             return LocalRedirect("/");
                     else return LocalRedirect("/dashboard");
                 }

@@ -1,6 +1,7 @@
 ﻿@page "/lecture/detail/{Id}"
 @inject ApplicationDbContext _db
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
+@inject UserService _usr
 
 <div class="row" data-aos="zoom-out" style="margin:4px;">
 <div class="col-md-8">
@@ -9,6 +10,15 @@
             <div class="card" style="background-image:url('assets/img/portfolio/product-1.jpg');height:150px;">
                 <div class="card-body">
                     <h3>@lect.CourseCode : @lect.LectureName</h3>
+                    <br/>
+                    @if(Attendances.Any(x => x.MatricNo == user.MatricNo))
+                    {
+                        <p>ALREADY SIGNED !!!</p>
+                    }
+                    @if(!Attendances.Any(x => x.MatricNo == user.MatricNo))
+                    {
+                            <button class="btn btn-info btn-lg" @onclick="@SignAtt">Sign Attentdance</button>
+                    }
                 </div>
             </div>
             <div>
@@ -29,7 +39,14 @@
                             <div class="card" style="margin:2px;">
                                 <div class="card-body">
                                     <h5><a target="_blank" href="@item.Video"><i class="fa fa-play" style="scale:1.7;margin:3px;"></i> @item.LessonName</a></h5>
-                                    <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                 </div>
                             </div>
                         }
@@ -44,7 +61,14 @@
                             <div class="card" style="margin:2px;">
                                 <div class="card-body">
                                     <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.ResourceName</a></h5>
-                                    <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                 </div>
                             </div>
                         }
@@ -59,7 +83,14 @@
                             <div class="card" style="margin:2px;">
                                 <div class="card-body">
                                     <h5><a target="_blank" href="@item.File"><i class="fa fa-file" style="scale:1.7;margin:3px;"></i> @item.Title</a></h5>
-                                    <small>@item.Size KB | @(int.Parse(item.Size) / 1024) MB</small>
+                                        @if (int.Parse(item.Size) >= 1024)
+                                        {
+                                            <small>@(int.Parse(item.Size) / 1024) MB</small>
+                                        }
+                                        @if (int.Parse(item.Size) < 1024)
+                                        {
+                                            <small>@item.Size KB </small>
+                                        }
                                 </div>
                             </div>
                         }
@@ -132,11 +163,15 @@
     public List<Resource> Resources = new();
     public List<Assignment> Assignments = new();
     public List<Attendance> Attendances = new();
+    public Attendance att = new();
+    public User user = new();
     public int Key = 1;
 
     protected override async Task OnInitializedAsync()
     {
+        user = await _usr.CurrentUser();
         await GetAll();
+
     }
 
     async Task GetAll()
@@ -153,5 +188,33 @@
         {
             Console.WriteLine(e);
         }
+    }
+
+    async Task SignAtt()
+    {
+        try
+        {
+            PassParam();
+            if (att != null)
+            {
+                await _db.Attendance.AddAsync(att);
+                await _db.SaveChangesAsync();
+            }
+            await GetAll();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+    }
+
+    void PassParam()
+    {
+        att.LectureId = lect.LectureId;
+        att.FirstName = user.FirstName;
+        att.LastName = user.LastName;
+        att.MiddleName = user.MiddleName;
+        att.Department = user.Department;
+        att.MatricNo = user.MatricNo;
     }
 }

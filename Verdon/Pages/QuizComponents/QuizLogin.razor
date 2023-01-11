@@ -1,7 +1,7 @@
 ﻿@page "/quiz/login"
 @inject QuizDbContext _db
 @inject NavigationManager router
-@attribute [Authorize(Roles = "User,HOC")]
+@attribute [Authorize(Roles = "User,HOC,Admin")]
 
 <section class="container col-md-8 card" style="background-image:url('assets/img/portfolio/books-1.jpg'); margin-top:30px;">
     <div data-aos="zoom-out" >
@@ -32,14 +32,21 @@
     {
         try
         {
-            var req = await _db.PrivateQuiz.Where(x => x.QuizId == int.Parse(Id) && x.Visible == true).SingleAsync();
-            if(req.Password.Equals(Pwd))
+            var req = await _db.PrivateQuiz.Where(x => x.QuizId == int.Parse(Id) && x.Visible == true).SingleOrDefaultAsync();
+            if(req != null)
             {
-                router.NavigateTo($"/quiz/instruction/{req.PrivateQuizId}");
+                if (req.Password.Equals(Pwd))
+                {
+                    router.NavigateTo($"/quiz/instruction/{req.PrivateQuizId}");
+                }
+                else
+                {
+                    val = "Password does not match";
+                }
             }
             else
             {
-                val = "Password does not match";
+                val = "invalid Quiz ID";
             }
 
         }catch(Exception e)

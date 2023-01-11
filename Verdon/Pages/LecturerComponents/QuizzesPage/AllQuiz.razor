@@ -159,7 +159,7 @@
         try
         {
             Key = 1;
-            var req = await _db.PrivateQuiz.ToListAsync();
+            var req = await _db.PrivateQuiz.Where(x => x.UserId == Id).ToListAsync();
             model = req;
 
 
