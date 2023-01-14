@@ -11,7 +11,7 @@ namespace Verdon.Services
 {
     public class SeedService
     {
-        public static void SeedData(UserManager<User> userManager, RoleManager<Role> roleManager, ApplicationDbContext _db)
+        public static void SeedData(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext _db)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
@@ -184,12 +184,12 @@ namespace Verdon.Services
 
 
 
-        public static void SeedRoles(RoleManager<Role> roleManager)
+        public static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             if (!roleManager.RoleExistsAsync
                ("User").Result)
             {
-                Role role = new Role();
+                var role = new IdentityRole();
                 role.Name = "User";
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
@@ -198,7 +198,7 @@ namespace Verdon.Services
             if (!roleManager.RoleExistsAsync
                ("HOC").Result)
             {
-                Role role = new Role();
+                var role = new IdentityRole();
                 role.Name = "HOC";
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
@@ -208,7 +208,7 @@ namespace Verdon.Services
             if (!roleManager.RoleExistsAsync
                 ("Admin").Result)
             {
-                Role role = new Role();
+                var role = new IdentityRole();
                 role.Name = "Admin";
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;
@@ -217,7 +217,7 @@ namespace Verdon.Services
             if (!roleManager.RoleExistsAsync
                ("Lecturer").Result)
             {
-                Role role = new Role();
+                var role = new IdentityRole();
                 role.Name = "Lecturer";
                 IdentityResult roleResult = roleManager.
                 CreateAsync(role).Result;

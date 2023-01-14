@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using Verdon.Core.Base;
 using Verdon.Core.Dynamic;
@@ -9,16 +12,19 @@ using Verdon.Core.Socical;
 
 namespace Verdon.Data
 {
+    [SecurityPermission(SecurityAction.Demand, ControlThread = true)]
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-
+            Database.EnsureCreatedAsync();
+            if (Database.GetAppliedMigrationsAsync().Result.Count() == 0)
+                Database.MigrateAsync();
         }
         // base models
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<IdentityRole> Role { get; set; }
         public virtual DbSet<Rating> Ratings { get; set; }
         public virtual DbSet<SecurityQuestion> SecurityQuestion { get; set; }
         public virtual DbSet<UserRole> UserRole { get; set; }
@@ -53,12 +59,14 @@ namespace Verdon.Data
 
     }
 
+
+    [SecurityPermission(SecurityAction.Demand, ControlThread = true)]
     public class QuizDbContext : DbContext
     {
         public QuizDbContext(DbContextOptions<QuizDbContext> options)
            : base(options)
         {
-            
+            Database.EnsureCreatedAsync();
         }
 
         public virtual DbSet<PrivateAttempt> PrivateAttempt { get; set; }

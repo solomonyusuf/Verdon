@@ -166,7 +166,7 @@
         }
         if (level != null)
         {
-            books = await _db.Book.Where(x => x.Level.ToString().Contains(level)).ToListAsync();
+            books = await _db.Book.Where(x => x.Level == int.Parse(level)).ToListAsync();
         }
 
 
@@ -218,6 +218,7 @@
             data = null;
             value = null;
             filter = null;
+            counter = 0;
             books = await GetAll();
         }
         catch (Exception e)

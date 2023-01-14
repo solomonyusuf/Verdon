@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -21,12 +21,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Core" Version="5.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\StaticFiles\" />
-  </ItemGroup>
 
+	<ItemGroup>
+		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\StaticFiles\" />
+	</ItemGroup>
+	
   <ItemGroup>
     <None Include="Pages\GeneralComponents\VisitorLecture.razor" />
     <None Include="Pages\GeneralComponents\ProfilePage.razor" />
