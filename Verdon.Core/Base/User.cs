@@ -18,7 +18,7 @@ namespace Verdon.Core.Base
         public string Course { get; set; }
         public string Department { get; set; }
         public string School { get; set; }
-        public string DOB { get; set; }
+        public DateTime DOB { get; set; }
         public string Sex { get; set; }
         public string Skills { get; set; }
         public string Bio { get; set; }
