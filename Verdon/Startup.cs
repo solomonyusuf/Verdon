@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.AccessControl;
 using System.Security.Permissions;
 using System.Threading.Tasks;
@@ -22,6 +23,8 @@ using Verdon.Areas.Identity;
 using Verdon.Core.Base;
 using Verdon.Data;
 using Verdon.Services;
+
+
 
 namespace Verdon
 {
@@ -57,6 +60,7 @@ namespace Verdon
             services.AddTransient<UploadController>();
             services.AddHttpContextAccessor();
             services.AddHttpClient();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

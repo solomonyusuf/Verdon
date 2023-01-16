@@ -1,0 +1,110 @@
+﻿
+
+@{
+    var showClass = IsVisible ? "mobile-nav-toggle" : "d-none";
+}
+
+<div class="toast-container p-3 @showClass" data-bs-autohide="true" data-bs-delay="5000">
+    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">
+                <a href="/" class="logo d-flex align-items-center scrollto me-auto me-lg-0">
+                    <h1>Ver<span>don.</span></h1>
+                </a>
+
+            </strong>
+            <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
+        </div>
+        <style>
+            li{margin-bottom:20px;}
+        </style>
+        <div class="toast-body" >
+            <table style="height:400px;font-size:large;">
+                <thead>
+                    <tr>
+                        <th>MENU</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><ul>
+                                <AuthorizeView Roles="User,Admin">
+                                    <Authorized>
+                                        <li><NavLink class="nav-link scrollto" href="/quiz/login">Quiz</NavLink></li>
+
+                                        <li><NavLink class="nav-link scrollto" href="/visitor/lecture">All lectures</NavLink></li>
+                                        <li><NavLink class="nav-link scrollto" href="/lecture">lecture login</NavLink></li>
+                                           
+                                        <li><NavLink class="nav-link scrollto" href="/libary">Libary</NavLink></li>
+                                    </Authorized>
+                                </AuthorizeView>
+                    </ul></td></tr>
+                    <tr><td><ul>
+                                <AuthorizeView Roles="HOC">
+                                    <Authorized>
+                                        <li><NavLink class="nav-link scrollto" href="/quiz/login">Quiz</NavLink></li>
+                                        <li class="dropdown">
+                                            <a href="#"><span>Lecture</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                            <ul>
+                                                <li><NavLink href="/visitor/lecture">All lectures</NavLink></li>
+                                                <li><NavLink href="/lecture">lecture login</NavLink></li>
+                                            </ul>
+                                        </li>
+                                        <li><NavLink class="nav-link scrollto" href="/libary/hoc">Libary</NavLink></li>
+
+                                    </Authorized>
+                                </AuthorizeView>
+                                <AuthorizeView Roles="Admin">
+                                    <Authorized>
+                                        <li><NavLink class="nav-link scrollto" href="/users">Users</NavLink></li>
+
+                                    </Authorized>
+                                </AuthorizeView>
+
+                                <li><NavLink class="nav-link scrollto" href="/socical">Socical</NavLink></li>
+
+                                <AuthorizeView>
+                                    <Authorized>
+
+                                      
+
+
+                                            <li><a class="nav-link scrollto" href="/profile"> @context.User.Identity.Name!</a></li>
+
+                                        
+
+                                    </Authorized>
+                                    <NotAuthorized>
+                                       
+
+
+                                            <li><a class="btn btn-info" href="Identity/Account/Login">Get Started</a></li>
+
+                                 
+                                    </NotAuthorized>
+                                </AuthorizeView>
+                    </ul></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    public void Show()
+    {
+        IsVisible = true;
+        StateHasChanged();
+    }
+
+    private void Close()
+    {
+        IsVisible = false;
+        StateHasChanged();
+    }
+}

@@ -7,11 +7,11 @@
 @inject UploadController _upload
 
 <div class="justify-content-center">
-    <div class="col-md-9 col-lg-12 col-xl-10">
+    <div class="col-lg-12 col-xl-10">
         <div class="card shadow-lg o-hidden border-0 my-5">
             <div class="card-body p-0">
  
-                    <div class="col-lg-10">
+                    <div>
                         <div class="p-5">
                             <div class="text-center">
                                 <h1>Ver<span style="color:rgb(43,187,208);">don.</span></h1>
@@ -51,13 +51,13 @@
                                                                </div>
                                                                 </div>
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>First Name</strong></label>
                                                                         <InputText @bind-Value="@user.FirstName" class="form-control" type="text"  />
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>Middle Name</strong></label>
                                                                         <InputText @bind-Value="@user.MiddleName" class="form-control" type="text"  />
@@ -66,7 +66,7 @@
                                                             </div>
 
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>Last Name</strong></label>
                                                                         <InputText @bind-Value="@user.LastName" class="form-control" type="text"  />
@@ -75,7 +75,7 @@
               
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
                                                                         <InputSelect class="form-control" @bind-Value="@user.Sex">
@@ -86,7 +86,7 @@
                                                                         </InputSelect>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
                                                                         <InputSelect class="form-control" @bind-Value="@user.Department">
@@ -99,7 +99,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>Course Name</strong></label>
                                                                         <InputText @bind-Value="@user.CourseName" class="form-control" type="text"  />
@@ -113,7 +113,7 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong>DOB</strong></label>
                                                                         <InputDate @bind-Value="@user.DOB" class="form-control" type="text" />
@@ -126,7 +126,7 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col">
+                                                            <div class="col-sm-12 col-md-6">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Email</strong></label>
                                                                     <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
@@ -150,13 +150,13 @@
                                                     <div class="card-body">
                                                         <EditForm Model="@user">
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong><i class="fa fa-github"></i> Github</strong></label>
                                                                         <InputText @bind-Value="@user.Github" class="form-control" placeholder="Paste link here..." type="text" />
                                                                     </div>
                                                                 </div>
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong><i class="fa fa-facebook"></i> Facebook</strong></label>
                                                                         <InputText @bind-Value="@user.Facebook" class="form-control" placeholder="Paste link here..." type="text" />
@@ -165,7 +165,7 @@
                                                             </div>
 
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong><i class="fa fa-linkedin"></i> Linkedin</strong></label>
                                                                         <InputText @bind-Value="@user.Linkedin" class="form-control" placeholder="Paste link here..." type="text" />
@@ -174,26 +174,26 @@
 
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col">
+                                                                <div class="col-sm-12 col-md-6">
                                                                     <div class="mb-3">
                                                                         <label class="form-label"><strong><i class="fa fa-twitter"></i> Twitter</strong></label>
                                                                     <InputText @bind-Value="@user.Twitter" class="form-control" placeholder="Paste link here..." type="text" />
                                                                     </div>
                                                                </div>           
                                                             </div>
-                                                            <div class="col">
+                                                            <div class="col-sm-12 col-md-6">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Skills</strong></label>
                                                                     <InputTextArea @bind-Value="@user.Skills" class="form-control" placeholder="Enter skills here" type="text" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col">
+                                                            <div class="col-sm-12 col-md-6">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Bio</strong></label>
                                                                 <InputTextArea @bind-Value="@user.Bio" class="form-control" type="text" placeholder="Enter bio here" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col">
+                                                            <div class="col-sm-12 col-md-6">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Description</strong></label>
                                                                 <InputTextArea @bind-Value="@user.Description" class="form-control" placeholder="Describe your skills" type="text" />
