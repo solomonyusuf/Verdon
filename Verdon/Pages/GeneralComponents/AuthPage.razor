@@ -260,7 +260,7 @@
         {
             _db.User.Update(user);
             await _db.SaveChangesAsync();
-           // router.NavigateTo("/Identity/Account/Login");
+            router.NavigateTo("/Identity/Account/Login");
         }
         catch(Exception e)
         {
