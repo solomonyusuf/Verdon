@@ -223,7 +223,7 @@
 
 
 
-                                                        <button @onclick="Post" class="btn btn-info w-100">Save Changes</button>
+                                                        <a @onclick="Post" href="/Identity/Account/Login" class="btn btn-info w-100">Procced to Login</a>
 
                                                     </EditForm>
                                                 </div>
@@ -260,7 +260,7 @@
         {
             _db.User.Update(user);
             await _db.SaveChangesAsync();
-            router.NavigateTo("/Identity/Account/Login");
+           
         }
         catch(Exception e)
         {
