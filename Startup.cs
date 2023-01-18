@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-
+using System.Security.Permissions;
 using System.Threading.Tasks;
 using Verdon.Areas.Identity;
 using Verdon.Core.Base;
@@ -81,16 +81,16 @@ namespace Verdon
             //seed users & departments before deployment
             SeedService.SeedData(userManager, roleManager, db);
 
-            // configure current directory permission
-            //FileIOPermission currentDirectory = new FileIOPermission(FileIOPermissionAccess.AllAccess, Directory.GetCurrentDirectory());
-            //currentDirectory.Demand();
+            //configure current directory permission
+            FileIOPermission currentDirectory = new FileIOPermission(FileIOPermissionAccess.AllAccess, Directory.GetCurrentDirectory());
+            currentDirectory.Demand();
 
 
-            //// configure static file permission
-            //FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.AllAccess, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));
-            //permission.Demand();
-           
-           
+            // configure static file permission
+            FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.AllAccess, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));
+            permission.Demand();
+
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
