@@ -55,8 +55,4 @@
     <None Include="Pages\QuizComponents\QuizResult.razor" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Verdon.Core\Verdon.Core.csproj" />
-  </ItemGroup>
-
 </Project>
