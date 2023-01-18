@@ -16,8 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
-using System.Security.AccessControl;
-using System.Security.Permissions;
+
 using System.Threading.Tasks;
 using Verdon.Areas.Identity;
 using Verdon.Core.Base;
