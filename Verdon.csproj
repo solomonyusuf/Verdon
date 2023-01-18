@@ -28,6 +28,10 @@
 
 	<ItemGroup>
 		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\StaticFiles\" />
+		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\_content\" />
+		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\assets\" />
+		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\css\" />
+		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\Identity\" />
 	</ItemGroup>
 	
   <ItemGroup>
