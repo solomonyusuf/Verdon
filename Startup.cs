@@ -83,13 +83,13 @@ namespace Verdon
             SeedService.SeedData(userManager, roleManager, db);
 
             // configure current directory permission
-            FileIOPermission currentDirectory = new FileIOPermission(FileIOPermissionAccess.AllAccess, Directory.GetCurrentDirectory());
-            currentDirectory.Demand();
+            //FileIOPermission currentDirectory = new FileIOPermission(FileIOPermissionAccess.AllAccess, Directory.GetCurrentDirectory());
+            //currentDirectory.Demand();
 
 
-            // configure static file permission
-            FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.AllAccess, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));
-            permission.Demand();
+            //// configure static file permission
+            //FileIOPermission permission = new FileIOPermission(FileIOPermissionAccess.AllAccess, Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot", "StaticFiles"));
+            //permission.Demand();
            
            
             app.UseHttpsRedirection();
