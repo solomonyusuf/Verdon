@@ -55,6 +55,9 @@
         try
         {
             user = await _usr.CurrentUser();
+            var e = user;
+            if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
+                router.NavigateTo($"/proceed/{e.Id}");
             quiz = await _db.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
             var r = await _db.Track.FindAsync(user.Id);
             if(r  != null)

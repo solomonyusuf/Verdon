@@ -2,6 +2,8 @@
 @inject ApplicationDbContext _db
 @inject UploadController _upload
 @attribute [Authorize(Roles = "User,HOC,Admin")]
+@inject UserService _usr
+@inject NavigationManager router
 
 <div class="row" data-aos="zoom-out" style="margin-top:30px;">
     <div class="col-md-4">
@@ -134,7 +136,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await GetAll();
+        var e = await _usr.CurrentUser();
+        if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
+            router.NavigateTo($"/proceed/{e.Id}");
+        if (e.Department != null)
+            await GetAll();
         departments = await _db.Department.ToListAsync();
     }
 

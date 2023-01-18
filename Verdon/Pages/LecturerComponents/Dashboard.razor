@@ -4,7 +4,7 @@
 @inject UserService _usr
 @attribute [Authorize(Roles = "Lecturer")]
 @inherits LayoutComponentBase
-
+@inject NavigationManager router
 
 <head>
     <link href="assets/img/favicon.png" rel="icon">
@@ -172,7 +172,9 @@
     {
         var e = await _usr.CurrentUser();
         userId = e.Id;
-       if(userId != null)
+        if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
+            router.NavigateTo($"/proceed/{userId}");
+        if(userId != null)
             await GetAll();
     }
 

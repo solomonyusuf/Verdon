@@ -3,6 +3,7 @@
 @inject UploadController _upload
 @inject UserService _usr
 @attribute [Authorize(Roles = "User,HOC,Admin")]
+@inject NavigationManager router
 
 <br />
 <div class="container-fluid" data-aos="zoom-out">
@@ -99,6 +100,8 @@
     protected override async Task OnInitializedAsync()
     {
         var e = await _usr.CurrentUser();
+        if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
+            router.NavigateTo($"/proceed/{e.Id}");
         department = e.Department;
         if (department != null)
                 await GetAll();
