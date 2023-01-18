@@ -19,7 +19,7 @@ namespace Verdon.Data
             : base(options)
         {
             Database.EnsureCreatedAsync();
-            if (Database.GetAppliedMigrationsAsync().Result.Count() == 0)
+           if (Database.GetPendingMigrationsAsync().Result.Count() > 0)
                 Database.MigrateAsync();
         }
         // base models
