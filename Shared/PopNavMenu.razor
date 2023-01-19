@@ -16,7 +16,7 @@
             <button type="button" class="btn-close" aria-label="Close" @onclick="Close"></button>
         </div>
         <style>
-            li{margin-bottom:20px;}
+            li{margin-bottom:30px;}
         </style>
         <div class="toast-body" >
             <table style="height:400px;font-size:large;">
@@ -86,20 +86,14 @@
                                <Authorized>
                                     <ul>
 
-                                        <li class="dropdown">
-                                            <a href="#"><span>Quiz</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                                            <ul>
-                                                <li><NavLink href="/allquiz">All Quiz</NavLink></li>
-                                                <li><NavLink href="/add/quiz">Add Quiz</NavLink></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown">
-                                            <a href="#"><span>Lecture</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-                                            <ul>
-                                                <li><NavLink href="/alllecture">All Lecture</NavLink></li>
-                                                <li><NavLink href="/add/lecture">Add Lecture</NavLink></li>
-                                            </ul>
-                                        </li>
+
+                                        <li><NavLink class="nav-link scrollto" href="/allquiz">All Quiz</NavLink></li>
+                                        <li><NavLink class="nav-link scrollto"  href="/add/quiz">Add Quiz</NavLink></li>
+
+
+                                        <li><NavLink class="nav-link scrollto" href="/alllecture">All Lecture</NavLink></li>
+                                        <li><NavLink class="nav-link scrollto" href="/add/lecture">Add Lecture</NavLink></li>
+                                           
                                         <li><NavLink class="nav-link scrollto" href="/socical">Socical</NavLink></li>
 
 
