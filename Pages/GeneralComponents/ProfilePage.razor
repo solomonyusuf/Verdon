@@ -30,125 +30,120 @@
                                 </li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane active" role="tabpanel" id="tab-1">
-                                        <div class="row">
-                                            <div class="col">
-                                                <div class="card mb-3">
-                                                    <div class="card-header py-3">
-                                                        <p class="text-primary m-0 fw-bold"> User Info </p>
-                                                    </div>
-                                                    <div class="card-body">
-                                                        <EditForm Model="@user">
-                                                            @if(user.Image != null)
-                                                            {
+                                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="card mb-3">
+                                                <div class="card-header py-3">
+                                                    <p class="text-primary m-0 fw-bold"> User Info </p>
+                                                </div>
+                                                <div class="card-body">
+                                                    <EditForm Model="@user">
+                                                        @if (user.Image != null)
+                                                        {
                                                             <div class="col">
                                                                 <img class="rounded-circle mb-3 mt-4" src="@user.Image" width="160" height="160" />
                                                             </div>
-                                                            }
-                                                            <div class="col">
-                                                          <div class="form-group">
-                                                        <InputFile OnChange="@Upload" type="file" class="form-control form-control-lg" />
-                                                               </div>
+                                                        }
+                                                        <div class="col">
+                                                            <div class="form-group">
+                                                                <InputFile OnChange="@Upload" type="file" class="form-control form-control-lg" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>First Name</strong></label>
+                                                                    <InputText @bind-Value="@user.FirstName" class="form-control" type="text" />
                                                                 </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>First Name</strong></label>
-                                                                        <InputText @bind-Value="@user.FirstName" class="form-control" type="text"  />
-                                                                    </div>
+                                                            </div>
+                                                            <div class="col-sm-12 ">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Middle Name</strong></label>
+                                                                    <InputText @bind-Value="@user.MiddleName" class="form-control" type="text" />
                                                                 </div>
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Middle Name</strong></label>
-                                                                        <InputText @bind-Value="@user.MiddleName" class="form-control" type="text"  />
-                                                                    </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Last Name</strong></label>
+                                                                    <InputText @bind-Value="@user.LastName" class="form-control" type="text" />
                                                                 </div>
                                                             </div>
 
-                                                            <div class="row">
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Last Name</strong></label>
-                                                                        <InputText @bind-Value="@user.LastName" class="form-control" type="text"  />
-                                                                    </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
+                                                                    <InputSelect class="form-control" @bind-Value="@user.Sex">
+                                                                        @foreach (var sex in new List<string> { "NULL", "MALE", "FEMALE" })
+                                                                        {
+                                                                            <option value="@sex">@sex</option>
+                                                                        }
+                                                                    </InputSelect>
                                                                 </div>
-              
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
-                                                                        <InputSelect class="form-control" @bind-Value="@user.Sex">
-                                                                            @foreach (var sex in new List<string> { "NULL", "MALE", "FEMALE" })
-                                                                            {
-                                                                                <option value="@sex">@sex</option>
-                                                                            }
-                                                                        </InputSelect>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
-                                                                        <InputSelect class="form-control" @bind-Value="@user.Department">
-                                                                            @foreach (var item in departments)
-                                                                            {
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
+                                                                    <InputSelect class="form-control" @bind-Value="@user.Department">
+                                                                        @foreach (var item in departments)
+                                                                        {
                                                                             <option value="@item.Name">@item.Name</option>
-                                                                            }
-                                                                        </InputSelect>
-                                                                    </div>
+                                                                        }
+                                                                    </InputSelect>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-12 col-md-6">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Course Name</strong></label>
-                                                                        <InputText @bind-Value="@user.CourseName" class="form-control" type="text"  />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Matric No</strong></label>
-                                                                        <InputText @bind-Value="@user.MatricNo" class="form-control" type="text"  />
-                                                                    </div>
+                                                        </div>
+                                                        <div class="row">
+
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>Matric No</strong></label>
+                                                                    <InputText @bind-Value="@user.MatricNo" class="form-control" type="text" />
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-sm-12">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>DOB</strong></label>
-                                                                        <InputDate @bind-Value="@user.DOB" class="form-control" type="text" />
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col">
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label"><strong>Course Code</strong></label>
-                                                                        <InputText @bind-Value="@user.Course" class="form-control" type="text" />
-                                                                    </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label"><strong>DOB</strong></label>
+                                                                    <InputDate @bind-Value="@user.DOB" class="form-control" type="datetime" />
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <div class="mb-3">
-                                                                    <label class="form-label"><strong>Email</strong></label>
-                                                                    <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
+                                                                    <label class="form-label"><strong>Department Code</strong></label>
+                                                                    <InputText @bind-Value="@user.Course" placeholder="eg (CSC, BIO, PHY)" class="form-control" type="text" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-12">
-                                                                <div class="mb-3">
-                                                                    <ul class="nav nav-tabs" role="tablist">
-                                                                        <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1">User</a></li>
-                                                                        <li class="nav-item" role="presentation"> <a class="btn btn-info" role="tab" data-bs-toggle="tab" href="#tab-2">Next</a></li>
-                     
-                                                                    </ul>
-                                                               
-                                                                </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="mb-3">
+                                                                <label class="form-label"><strong>Email</strong></label>
+                                                                <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
                                                             </div>
-                                                            
-                                                        </EditForm>
-                                                    </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="mb-3">
+                                                                <ul class="nav nav-tabs" role="tablist">
+                                                                    <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-bs-toggle="tab" href="#tab-1">User</a></li>
+                                                                    <li class="nav-item" role="presentation"> <a class="btn btn-info" role="tab" data-bs-toggle="tab" href="#tab-2">Next</a></li>
+
+                                                                </ul>
+
+                                                            </div>
+                                                        </div>
+                                                    </EditForm>
                                                 </div>
-                                                
                                             </div>
+
                                         </div>
+                                    </div>
+                                </div>
                                     </div>
                                     <div class="tab-pane" role="tabpanel" id="tab-2">
                                         <div class="row">
@@ -230,7 +225,6 @@
             </div>
         </div>
     </div>
-</div>
 
 @code{
     public User user = new();
@@ -238,6 +232,7 @@
     protected override async Task OnInitializedAsync()
     {
         user = await _usr.CurrentUser();
+        user.DOB = DateTime.Now;
         departments = await _db.Department.ToListAsync();
     }
 

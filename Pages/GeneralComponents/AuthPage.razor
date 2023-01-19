@@ -72,13 +72,13 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>First Name</strong></label>
                                                                     <InputText @bind-Value="@user.FirstName" class="form-control" type="text" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12 ">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Middle Name</strong></label>
                                                                     <InputText @bind-Value="@user.MiddleName" class="form-control" type="text" />
@@ -87,7 +87,7 @@
                                                         </div>
 
                                                         <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Last Name</strong></label>
                                                                     <InputText @bind-Value="@user.LastName" class="form-control" type="text" />
@@ -96,7 +96,7 @@
 
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Sex</strong>:&nbsp;@user.Sex&nbsp;</label>
                                                                     <InputSelect class="form-control" @bind-Value="@user.Sex">
@@ -107,7 +107,7 @@
                                                                     </InputSelect>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Department:&nbsp;@user.Department</strong></label>
                                                                     <InputSelect class="form-control" @bind-Value="@user.Department">
@@ -120,13 +120,8 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label"><strong>Course Name</strong></label>
-                                                                    <InputText @bind-Value="@user.CourseName" class="form-control" type="text" />
-                                                                </div>
-                                                            </div>
-                                                            <div class="col">
+
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>Matric No</strong></label>
                                                                     <InputText @bind-Value="@user.MatricNo" class="form-control" type="text" />
@@ -134,20 +129,20 @@
                                                             </div>
                                                         </div>
                                                         <div class="row">
-                                                            <div class="col-sm-12 col-md-6">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
                                                                     <label class="form-label"><strong>DOB</strong></label>
-                                                                    <InputDate @bind-Value="@user.DOB" class="form-control" type="text" />
+                                                                    <InputDate @bind-Value="@user.DOB" class="form-control" type="datetime" />
                                                                 </div>
                                                             </div>
-                                                            <div class="col">
+                                                            <div class="col-sm-12">
                                                                 <div class="mb-3">
-                                                                    <label class="form-label"><strong>Course Code</strong></label>
-                                                                    <InputText @bind-Value="@user.Course" class="form-control" type="text" />
+                                                                    <label class="form-label"><strong>Department Code</strong></label>
+                                                                    <InputText @bind-Value="@user.Course" placeholder="eg (CSC, BIO, PHY)" class="form-control" type="text" />
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="col-sm-12 col-md-6">
+                                                        <div class="col-sm-12">
                                                             <div class="mb-3">
                                                                 <label class="form-label"><strong>Email</strong></label>
                                                                 <InputText @bind-Value="@user.Email" class="form-control" type="text" disabled="disabled" id="last_name" />
@@ -260,6 +255,7 @@
     protected override async Task OnInitializedAsync()
     {
         user = await _db.User.FindAsync(Id);
+        user.DOB = DateTime.Now;
         departments = await _db.Department.ToListAsync();
     }
 
