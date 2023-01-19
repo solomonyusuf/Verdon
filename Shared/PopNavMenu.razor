@@ -80,6 +80,36 @@
                                     </NotAuthorized>
                                 </AuthorizeView>
                     </ul></td></tr>
+                    <tr>
+                        <td>
+                            <AuthorizeView Roles="Lecturer">
+                               <Authorized>
+                                    <ul>
+
+                                        <li class="dropdown">
+                                            <a href="#"><span>Quiz</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                            <ul>
+                                                <li><NavLink href="/allquiz">All Quiz</NavLink></li>
+                                                <li><NavLink href="/add/quiz">Add Quiz</NavLink></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#"><span>Lecture</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                                            <ul>
+                                                <li><NavLink href="/alllecture">All Lecture</NavLink></li>
+                                                <li><NavLink href="/add/lecture">Add Lecture</NavLink></li>
+                                            </ul>
+                                        </li>
+                                        <li><NavLink class="nav-link scrollto" href="/socical">Socical</NavLink></li>
+
+
+
+                                    </ul>
+                                    <LoginDisplay />
+                               </Authorized>
+                           </AuthorizeView>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

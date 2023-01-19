@@ -60,9 +60,17 @@
 
             </ul>
             <LoginDisplay />
-            <i class="bi bi-list mobile-nav-toggle d-none"></i>
+            <i class="bi bi-list mobile-nav-toggle d-none" @onclick="Pop"></i>
         </nav><!-- .navbar -->
+        <PopNavMenu @ref="_nav" />
+        @code {
+            private PopNavMenu _nav;
 
+            void Pop()
+            {
+                _nav.Show();
+            }
+        }
     </div>
 </header><!-- End Header -->
 
