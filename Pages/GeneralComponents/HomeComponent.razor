@@ -101,7 +101,7 @@
     {
         var e = await _usr.CurrentUser();
         if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
-            router.NavigateTo($"/proceed/{e.Id}");
+            router.NavigateTo($"/profile");
         department = e.Department;
         if (department != null)
                 await GetAll();

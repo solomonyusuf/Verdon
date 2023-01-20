@@ -173,7 +173,7 @@
         var e = await _usr.CurrentUser();
         userId = e.Id;
         if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
-            router.NavigateTo($"/proceed/{userId}");
+            router.NavigateTo($"/profile");
         if(userId != null)
             await GetAll();
     }

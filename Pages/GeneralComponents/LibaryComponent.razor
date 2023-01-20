@@ -92,7 +92,7 @@
 
         var e = await _usr.CurrentUser();
         if (e.MatricNo == null || e.Department == null || e.FirstName == null || e.LastName == null || e.Image == null)
-            router.NavigateTo($"/proceed/{e.Id}");
+            router.NavigateTo($"/profile");
         if (e.Department != null)
             await GetAll();
         departments = await _db.Department.ToListAsync();

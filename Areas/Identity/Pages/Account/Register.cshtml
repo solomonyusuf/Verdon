@@ -26,12 +26,13 @@
                                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                                 </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input asp-for="Input.Password" class="form-control" class="form-control form-control-user" type="password" placeholder="Password" />
+                                <div class="row">
+                                    
+                                    <div class="mb-3">
+                                        <input asp-for="Input.Password" class="form-control" class="form-control form-control-user" type="password" placeholder="Password: (A-Z, $#!, 0-9, 8 characters) " />
                                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="mb-3">
                                         <input asp-for="Input.ConfirmPassword" class="form-control" class="form-control" class="form-control form-control-user" type="password" placeholder="Confirm Password" />
                                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                                     </div>
@@ -42,9 +43,9 @@
                                 <p>
                                     <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already have an account ?</a>
                                 </p>
-                                <p>
+                               @* <p>
                                     <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                                </p>
+                                </p>*@
                             </div>
                         </div>
                     </div>
