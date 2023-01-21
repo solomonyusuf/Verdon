@@ -37,7 +37,7 @@ namespace Verdon.Areas.Identity.Pages.Account
             }
             else
             {
-                return RedirectToPage();
+                return LocalRedirect("/");
             }
         }
     }

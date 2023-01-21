@@ -13,4 +13,12 @@
     }
    @* <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>*@
     <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+    <li class="nav-item">
+        <a id="manage" class="btn btn-info w-100" href="/" title="Manage">Home</a> <br />
+    </li>
+    <li class="nav-item w-100">
+        <form id="logoutForm" class="form-inline nav-link" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+            <button id="logout" type="submit" class="btn btn-danger ">Logout</button>
+        </form>
+    </li>
 </ul>
