@@ -44,8 +44,9 @@
 
 
 
-
-    <header>
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <header>
             <nav class="navbar navbar-expand-sm navbar-light navbar-toggleable-sm bg-white border-bottom box-shadow mb-3">
                 <div class="container">
                     <a class="navbar-brand" href="~/">
@@ -70,10 +71,10 @@
                                 $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
                         }
                     </div>
-            </div>
-        </nav>
-    </header>
-   
+                </div>
+            </nav>
+        </header>
+    }
     <div>
         @RenderBody()
     </div>
