@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 	   <NoWarn>$(NoWarn);SYSLIB0003</NoWarn>
     <UserSecretsId>aspnet-Verdon-6D7BD649-7588-4133-BBDE-69AE7F7D05E0</UserSecretsId>
     <PlatformTarget>AnyCPU</PlatformTarget>
