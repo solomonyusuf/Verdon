@@ -3,6 +3,7 @@
 @using System.Net.Http.Json
 @using Verdon.Core.Base
 @inject QuizDbContext _context
+@inject ApplicationDbContext _db
 @inject NavigationManager router
 @inject UserService _user
 @attribute [Authorize(Roles = "User,HOC,Admin")]
@@ -179,21 +180,21 @@
     protected override async Task OnInitializedAsync()
     {
         await GetAll();
-        ConfigureTrack();
-        LoadQuestion(questions[0], QKey);
-        StartTimer();
         await FetchAttempts();
+        LoadQuestion(questions[0], QKey);
+        ConfigureTrack();
+        StartTimer();
     }
 
     public async Task GetAll()
     {
         try
         {
-            track = await _context.Track.Where(x => x.TrackId == UserId).SingleAsync();
-            user = await _user.CurrentUser();
+            track = await _context.Track.FindAsync(UserId);
+            user = await _db.User.FindAsync(UserId);
             quiz = await _context.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
             questions = await _context.PrivateQuestion.Where(x => x.PrivateQuizId == Guid.Parse(QuizId)).ToListAsync();
-
+            
         }
         catch(Exception e)
         {
@@ -201,15 +202,15 @@
         }
     }
 
-    void LoadQuestion(PrivateQuestion Q, int I)
+    async void LoadQuestion(PrivateQuestion Q, int I)
     {
         val = null;
         question = Q;
-        question.Options = _context.PrivateOption.Where(x=> x.PrivateQuestionId == Q.PrivateQuestionId).ToList();
+        question.Options = await _context.PrivateOption.Where(x=> x.PrivateQuestionId == Q.PrivateQuestionId).ToListAsync();
         Key = 1;
         QKey = I;
     }
-    async void EndAttempt()
+     void EndAttempt()
     {
         validate = "Please wait .......";
         Attempts.ForEach(x =>
@@ -218,15 +219,11 @@
                 score++;
         });
         PassParameters();
-        var r = await _context.PrivateQuizResult.AddAsync(result);
-        await _context.SaveChangesAsync();
-        _context.RemoveRange(Attempts);
-        await _context.SaveChangesAsync();
         router.NavigateTo($"/private/quiz/result/{QuizId}/{UserId}/{score}");
 
     }
 
-    void PassParameters()
+    async void PassParameters()
     {
         result.PrivateQuizResultId =  Guid.NewGuid().ToString();
         result.Score = (score * quiz.Factor).ToString();
@@ -237,6 +234,8 @@
         result.MiddleName = user.MiddleName;
         result.Department = user.Department;
         result.MatricNo = user.MatricNo;
+        await _context.PrivateQuizResult.AddAsync(result);
+        await _context.SaveChangesAsync();
     }
 
     async Task<Guid> CheckQuestion(Guid Id)

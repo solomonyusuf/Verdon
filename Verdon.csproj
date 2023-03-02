@@ -24,12 +24,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Core" Version="5.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.EntityFrameworkCore" Version="5.0.1" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
     <PackageReference Include="System.Security.Permissions" Version="6.0.0" />
   </ItemGroup>
 
 
 	<ItemGroup>
+		<Folder Include="Migrations\" />
 		<Folder CopyToOutputDirectory="PreserveNewest" Include="wwwroot\StaticFiles\" />
 	</ItemGroup>
 	

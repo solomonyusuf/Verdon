@@ -3,6 +3,7 @@
 @inject NavigationManager router
 @inject UserService _user
 @attribute [Authorize(Roles = "User,HOC,Admin")]
+@inject ApplicationDbContext _db
 
 <div class="col-md-8 mb-3" style="margin-top:50px;" align="center">
     <div class="card">
@@ -29,15 +30,35 @@
     public string UserId { get; set; }
     [Parameter]
     public string score { get; set; }
-
+   
     public User user = new();
     public PrivateQuiz exam = new();
 
     protected override async Task OnInitializedAsync()
     {
-        user = await _user.CurrentUser();
+        user = await _db.User.FindAsync(UserId);
         exam = await _context.PrivateQuiz.FindAsync(Guid.Parse(QuizId));
+        await FetchAttempts();
     }
+     async Task FetchAttempts()
+    {
+        try
+        {
+            var res = await _db.PrivateAttempt.Where(x => x.UserId == user.Id && x.QuizId == exam.QuizId).ToListAsync();
+           if(res != null)
+           {
+                _db.RemoveRange(res);
+                _db.SaveChanges();
+           }
+
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+
+    }
+    
 
 }
 \

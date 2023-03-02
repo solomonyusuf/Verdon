@@ -56,6 +56,7 @@ namespace Verdon
             services.AddSingleton<MailSettings>();
             services.AddSingleton<MailService>();
             services.AddTransient<UserService>();
+            services.AddTransient<User>();
             services.AddTransient<UploadController>();
             services.AddHttpContextAccessor();
             services.AddHttpClient();

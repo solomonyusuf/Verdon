@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,10 @@ namespace Verdon.Services
 
         public static void SeedDepartment(ApplicationDbContext _db)
         {
-            var list = _db.Department.ToListAsync();
-            var departments = new List<string> {
+            try
+            {
+                var list = _db.Department.ToListAsync();
+                var departments = new List<string> {
 
                 "Arabic",
                 "Christian Religious Studies",
@@ -83,102 +86,114 @@ namespace Verdon.Services
                 "Mechanical Engineering",
                 "Electronics & Computer Engineering",
                 "Chemical and Polymer Engineering"
-         };
-            departments.ForEach(async x =>
-            {
-                var data = list.Result.Any(y => y.Name == x);
-                if(data == false)
+            };
+                departments.ForEach(async x =>
                 {
-                    var input = new Department { Name = x };
-                    await _db.Department.AddAsync(input);
-                }          
-            });
-             _db.SaveChangesAsync();
+                    var data = list.Result.Any(y => y.Name == x);
+                    if (data == false)
+                    {
+                        var input = new Department { Name = x };
+                        await _db.Department.AddAsync(input);
+                    }
+                });
+                _db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public static void SeedUsers
     (UserManager<User> userManager)
         {
 
-            if (userManager.FindByNameAsync
-                  ("admin@gmail.com").Result == null)
+            try
             {
-                var user = new User();
-                user.UserName = "admin@gmail.com";
-                user.Email = "admin@gmail.com";
-                user.EmailConfirmed = true;
-                IdentityResult result = userManager.CreateAsync
-                (user, "Solomon12!").Result;
-
-                if (result.Succeeded)
+                if (userManager.FindByNameAsync
+                 ("admin@gmail.com").Result == null)
                 {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
+                    var user = new User();
+                    user.UserName = "admin@gmail.com";
+                    user.Email = "admin@gmail.com";
+                    user.EmailConfirmed = true;
+                    IdentityResult result = userManager.CreateAsync
+                    (user, "Solomon12!").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Admin").Wait();
+                    }
+                }
+
+
+                if (userManager.FindByNameAsync
+                       ("olafire03@gmail.com").Result == null)
+                {
+                    var user = new User();
+                    user.UserName = "olafire03@gmail.com";
+                    user.Email = "olafire03@gmail.com";
+                    user.EmailConfirmed = true;
+                    IdentityResult result = userManager.CreateAsync
+                    (user, "Solomon12!").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Admin").Wait();
+                    }
+                }
+
+                if (userManager.FindByNameAsync
+                       ("lecturer@gmail.com").Result == null)
+                {
+                    var user = new User();
+                    user.UserName = "lecturer@gmail.com";
+                    user.Email = "lecturer@gmail.com";
+                    user.EmailConfirmed = true;
+                    IdentityResult result = userManager.CreateAsync
+                    (user, "Solomon12!").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Lecturer").Wait();
+                    }
+                }
+
+                if (userManager.FindByNameAsync
+                       ("user@gmail.com").Result == null)
+                {
+                    var user = new User();
+                    user.UserName = "user@gmail.com";
+                    user.Email = "user@gmail.com";
+                    user.EmailConfirmed = true;
+                    IdentityResult result = userManager.CreateAsync
+                    (user, "Solomon12!").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "User").Wait();
+                    }
+                }
+
+                if (userManager.FindByNameAsync
+                       ("hoc@gmail.com").Result == null)
+                {
+                    var user = new User();
+                    user.UserName = "hoc@gmail.com";
+                    user.Email = "hoc@gmail.com";
+                    user.EmailConfirmed = true;
+                    IdentityResult result = userManager.CreateAsync
+                    (user, "Solomon12!").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "HOC").Wait();
+                    }
                 }
             }
-
-
-            if (userManager.FindByNameAsync
-                   ("olafire03@gmail.com").Result == null)
+            catch (Exception e)
             {
-                var user = new User();
-                user.UserName = "olafire03@gmail.com";
-                user.Email = "olafire03@gmail.com";
-                user.EmailConfirmed = true;
-                IdentityResult result = userManager.CreateAsync
-                (user, "Solomon12!").Result;
-
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "Admin").Wait();
-                }
-            }
-
-            if (userManager.FindByNameAsync
-                   ("lecturer@gmail.com").Result == null)
-            {
-                var user = new User();
-                user.UserName = "lecturer@gmail.com";
-                user.Email = "lecturer@gmail.com";
-                user.EmailConfirmed = true;
-                IdentityResult result = userManager.CreateAsync
-                (user, "Solomon12!").Result;
-
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "Lecturer").Wait();
-                }
-            }
-
-            if (userManager.FindByNameAsync
-                   ("user@gmail.com").Result == null)
-            {
-                var user = new User();
-                user.UserName = "user@gmail.com";
-                user.Email = "user@gmail.com";
-                user.EmailConfirmed = true;
-                IdentityResult result = userManager.CreateAsync
-                (user, "Solomon12!").Result;
-
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "User").Wait();
-                }
-            }
-
-            if (userManager.FindByNameAsync
-                   ("hoc@gmail.com").Result == null)
-            {
-                var user = new User();
-                user.UserName = "hoc@gmail.com";
-                user.Email = "hoc@gmail.com";
-                user.EmailConfirmed = true;
-                IdentityResult result = userManager.CreateAsync
-                (user, "Solomon12!").Result;
-
-                if (result.Succeeded)
-                {
-                    userManager.AddToRoleAsync(user, "HOC").Wait();
-                }
+                Console.WriteLine(e);
             }
         }
 
@@ -186,41 +201,48 @@ namespace Verdon.Services
 
         public static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            if (!roleManager.RoleExistsAsync
-               ("User").Result)
+            try 
             {
-                var role = new IdentityRole();
-                role.Name = "User";
-                IdentityResult roleResult = roleManager.
-                CreateAsync(role).Result;
+                if (!roleManager.RoleExistsAsync
+          ("User").Result)
+                {
+                    var role = new IdentityRole();
+                    role.Name = "User";
+                    IdentityResult roleResult = roleManager.
+                    CreateAsync(role).Result;
+                }
+
+                if (!roleManager.RoleExistsAsync
+                   ("HOC").Result)
+                {
+                    var role = new IdentityRole();
+                    role.Name = "HOC";
+                    IdentityResult roleResult = roleManager.
+                    CreateAsync(role).Result;
+                }
+
+
+                if (!roleManager.RoleExistsAsync
+                    ("Admin").Result)
+                {
+                    var role = new IdentityRole();
+                    role.Name = "Admin";
+                    IdentityResult roleResult = roleManager.
+                    CreateAsync(role).Result;
+                }
+
+                if (!roleManager.RoleExistsAsync
+                   ("Lecturer").Result)
+                {
+                    var role = new IdentityRole();
+                    role.Name = "Lecturer";
+                    IdentityResult roleResult = roleManager.
+                    CreateAsync(role).Result;
+                }
             }
-
-            if (!roleManager.RoleExistsAsync
-               ("HOC").Result)
+            catch(Exception e)
             {
-                var role = new IdentityRole();
-                role.Name = "HOC";
-                IdentityResult roleResult = roleManager.
-                CreateAsync(role).Result;
-            }
-
-
-            if (!roleManager.RoleExistsAsync
-                ("Admin").Result)
-            {
-                var role = new IdentityRole();
-                role.Name = "Admin";
-                IdentityResult roleResult = roleManager.
-                CreateAsync(role).Result;
-            }
-
-            if (!roleManager.RoleExistsAsync
-               ("Lecturer").Result)
-            {
-                var role = new IdentityRole();
-                role.Name = "Lecturer";
-                IdentityResult roleResult = roleManager.
-                CreateAsync(role).Result;
+                Console.WriteLine(e);
             }
         }
 

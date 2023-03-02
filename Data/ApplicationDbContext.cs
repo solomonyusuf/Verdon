@@ -19,7 +19,7 @@ namespace Verdon.Data
             : base(options)
         {
             Database.EnsureCreatedAsync();
-           if (Database.GetPendingMigrationsAsync().Result.Count() > 0)
+            if (Database.GetPendingMigrationsAsync().Result.Count() > 0)
                 Database.MigrateAsync();
         }
         // base models
@@ -66,7 +66,7 @@ namespace Verdon.Data
         public QuizDbContext(DbContextOptions<QuizDbContext> options)
            : base(options)
         {
-            Database.EnsureCreatedAsync();
+           // Database.EnsureCreatedAsync();
         }
 
         public virtual DbSet<PrivateAttempt> PrivateAttempt { get; set; }
